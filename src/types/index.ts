@@ -4,7 +4,8 @@ export type ServiceType =
   | 'passport-expired' 
   | 'passport-appointment-only' 
   | 'passport-damaged' 
-  | 'passport-lost';
+  | 'passport-lost'
+  | 'other-consular-services';
 
 export interface ServiceItem {
   id: ServiceType;

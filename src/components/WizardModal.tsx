@@ -55,6 +55,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
   const [phone, setPhone] = useState('');
   const [germanAddress, setGermanAddress] = useState('');
   const [passportType, setPassportType] = useState<'electronic' | 'ordinary'>('electronic');
+  const [otherServiceNote, setOtherServiceNote] = useState('');
 
   // Step 2 Form Data - INITIALIZED EMPTY (Mandatory files required before proceeding)
   const [peduliWniChecked, setPeduliWniChecked] = useState(false);
@@ -112,12 +113,14 @@ export const WizardModal: React.FC<WizardModalProps> = ({
     setPeduliWniRef('PWNI-FRA-2026-7819');
     setPoliceReportNo('POL-FFM-2026-004812');
     setDamageExplanation('Halaman paspor sobek sebagian karena tersangkut koper.');
+    setOtherServiceNote('Legalisasi Terjemahan Ijazah & Buku Nikah');
     setUploadedFiles({
       'old_passport': { name: 'paspor_lama_budi.pdf', size: '1.2 MB' },
       'residence_permit': { name: 'aufenthaltstitel_budi.jpg', size: '850 KB' },
       'meldebescheinigung': { name: 'meldebescheinigung_ffm.pdf', size: '420 KB' },
       'police_loss_doc': { name: 'polizei_verlustanzeige.pdf', size: '610 KB' },
-      'damage_photo': { name: 'foto_kerusakan_paspor.jpg', size: '940 KB' }
+      'damage_photo': { name: 'foto_kerusakan_paspor.jpg', size: '940 KB' },
+      'relevant_doc': { name: 'ijazah_terjemahan_resmi.pdf', size: '1.4 MB' }
     });
     setValidationError('');
   };
@@ -126,6 +129,10 @@ export const WizardModal: React.FC<WizardModalProps> = ({
   const handleNextStep1 = () => {
     if (!fullName.trim() || !email.trim() || !phone.trim()) {
       setValidationError(lang === 'en' ? 'Please fill in all required identity fields.' : 'Mohon lengkapi seluruh data identitas wajib.');
+      return;
+    }
+    if (service.id === 'other-consular-services' && !otherServiceNote.trim()) {
+      setValidationError(lang === 'en' ? 'Please describe your consular service affair / purpose.' : 'Mohon isi rincian keperluan layanan konsuler Anda.');
       return;
     }
     setValidationError('');
@@ -179,6 +186,15 @@ export const WizardModal: React.FC<WizardModalProps> = ({
         );
         return;
       }
+    } else if (service.id === 'other-consular-services') {
+      if (!uploadedFiles['relevant_doc'] || !uploadedFiles['residence_permit']) {
+        setValidationError(
+          lang === 'en'
+            ? 'Please upload your relevant document/paperwork and German residence permit.'
+            : 'Mohon unggah berkas dokumen terkait dan izin tinggal Jerman Anda.'
+        );
+        return;
+      }
     }
 
     setValidationError('');
@@ -204,12 +220,16 @@ export const WizardModal: React.FC<WizardModalProps> = ({
     }
 
     const uniqueId = `FRA-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    const fee = service.id === 'passport-appointment-only' ? 0 : passportType === 'electronic' ? 65 : 25;
+    const fee = (service.id === 'passport-appointment-only' || service.id === 'other-consular-services') ? 0 : passportType === 'electronic' ? 65 : 25;
+
+    const computedServiceName = service.id === 'other-consular-services' && otherServiceNote.trim()
+      ? `${lang === 'en' ? service.titleEn : service.titleId} — ${otherServiceNote}`
+      : lang === 'en' ? service.titleEn : service.titleId;
 
     const newRecord: ApplicationRecord = {
       id: uniqueId,
       serviceId: service.id,
-      serviceName: lang === 'en' ? service.titleEn : service.titleId,
+      serviceName: computedServiceName,
       applicantName: fullName,
       nik: nik || '3273012304910002',
       passportNumber: passportNumber || 'B8291048',
@@ -520,8 +540,27 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                 />
               </div>
 
-              {/* Passport Document Type Selection */}
-              {service.id !== 'passport-appointment-only' && (
+              {/* If Other Consular Services: Free-text note */}
+              {service.id === 'other-consular-services' && (
+                <div className="pt-2">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === 'en' ? 'Consular Affair / Purpose Details' : 'Rincian Keperluan Pelayanan Konsuler'} <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={otherServiceNote}
+                    onChange={(e) => setOtherServiceNote(e.target.value)}
+                    placeholder={lang === 'en' ? 'Describe the service or documents you need (e.g. Document legalization, birth/marriage registration, attestations, consular inquiry)...' : 'Jelaskan keperluan atau dokumen yang ingin Anda urus (contoh: Legalisasi ijazah, pencatatan sipil nikah/lahir, surat keterangan domisili)...'}
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    {lang === 'en' ? 'Provide details so the consular desk can prepare your physical session.' : 'Berikan keterangan agar loket konsuler dapat mempersiapkan berkas Anda.'}
+                  </p>
+                </div>
+              )}
+
+              {/* Passport Document Type Selection (Only for Passport services) */}
+              {service.id !== 'passport-appointment-only' && service.id !== 'other-consular-services' && (
                 <div className="pt-2">
                   <label className="block text-xs font-bold text-slate-700 mb-2">
                     {t.wizard.passportType}
@@ -663,8 +702,17 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
                 <div className="space-y-2.5">
                   
-                  {/* File 1: Old Passport (if not lost) */}
-                  {service.id !== 'passport-lost' && renderDocUploadRow(
+                  {/* File: Relevant Document (if other consular services) */}
+                  {service.id === 'other-consular-services' && renderDocUploadRow(
+                    'relevant_doc',
+                    'Relevant Document / Paperwork to be Processed',
+                    'Berkas Dokumen Terkait yang Akan Diproses / Dilegalisasi',
+                    true,
+                    'Scan or draft of paperwork (e.g. certificate, translation, power of attorney)'
+                  )}
+
+                  {/* File 1: Old Passport (if standard passport renewal or damaged) */}
+                  {service.id !== 'passport-lost' && service.id !== 'other-consular-services' && service.id !== 'passport-appointment-only' && renderDocUploadRow(
                     'old_passport',
                     'Current / Old Passport (Identity Page)',
                     'Paspor Lama / Saat Ini (Halaman Data)',
