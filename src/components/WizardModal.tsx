@@ -101,28 +101,41 @@ export const WizardModal: React.FC<WizardModalProps> = ({
     });
   };
 
-  // Sync / Pre-fill from Peduli WNI Record (Proper Institutional Naming)
+  // Sync / Pre-fill from Peduli WNI Record (STEP-BY-STEP PER TAB)
   const handleAutoFill = () => {
-    setFullName(currentUser?.name || 'Budi Santoso');
-    setNik('3273012304910002');
-    setPassportNumber('B8291048');
-    setEmail(currentUser?.email || 'budi.santoso@example.de');
-    setPhone('+49 176 12345678');
-    setGermanAddress('Mainzer Landstraße 182, 60327 Frankfurt am Main');
-    setPeduliWniChecked(true);
-    setPeduliWniRef('PWNI-FRA-2026-7819');
-    setPoliceReportNo('POL-FFM-2026-004812');
-    setDamageExplanation('Halaman paspor sobek sebagian karena tersangkut koper.');
-    setOtherServiceNote('Legalisasi Terjemahan Ijazah & Buku Nikah');
-    setUploadedFiles({
-      'old_passport': { name: 'paspor_lama_budi.pdf', size: '1.2 MB' },
-      'residence_permit': { name: 'aufenthaltstitel_budi.jpg', size: '850 KB' },
-      'meldebescheinigung': { name: 'meldebescheinigung_ffm.pdf', size: '420 KB' },
-      'police_loss_doc': { name: 'polizei_verlustanzeige.pdf', size: '610 KB' },
-      'damage_photo': { name: 'foto_kerusakan_paspor.jpg', size: '940 KB' },
-      'relevant_doc': { name: 'ijazah_terjemahan_resmi.pdf', size: '1.4 MB' }
-    });
-    setValidationError('');
+    if (currentStep === 1) {
+      // Step 1: Pre-fill Identity & German Contacts only
+      setFullName(currentUser?.name || 'Budi Santoso');
+      setNik('3273012304910002');
+      setPassportNumber('B8291048');
+      setEmail(currentUser?.email || 'budi.santoso@example.de');
+      setPhone('+49 176 12345678');
+      setGermanAddress('Mainzer Landstraße 182, 60327 Frankfurt am Main');
+      if (service.id === 'other-consular-services') {
+        setOtherServiceNote('Legalisasi Terjemahan Ijazah & Akta Kelahiran');
+      }
+      setValidationError('');
+    } else if (currentStep === 2) {
+      // Step 2: Pre-fill Document Checklist & Peduli WNI only
+      setPeduliWniChecked(true);
+      setPeduliWniRef('PWNI-FRA-2026-7819');
+      setPoliceReportNo('POL-FFM-2026-004812');
+      setDamageExplanation('Halaman paspor sobek sebagian karena tersangkut koper.');
+      setUploadedFiles({
+        'old_passport': { name: 'paspor_lama_budi.pdf', size: '1.2 MB' },
+        'residence_permit': { name: 'aufenthaltstitel_budi.jpg', size: '850 KB' },
+        'meldebescheinigung': { name: 'meldebescheinigung_ffm.pdf', size: '420 KB' },
+        'police_loss_doc': { name: 'polizei_verlustanzeige.pdf', size: '610 KB' },
+        'damage_photo': { name: 'foto_kerusakan_paspor.jpg', size: '940 KB' },
+        'relevant_doc': { name: 'ijazah_terjemahan_resmi.pdf', size: '1.4 MB' }
+      });
+      setValidationError('');
+    } else if (currentStep === 3) {
+      // Step 3: Pre-select available date & slot
+      setSelectedDate('2026-11-18');
+      setSelectedSlot('10:00 - 10:30 CET');
+      setValidationError('');
+    }
   };
 
   // Step 1 Validation
@@ -382,16 +395,24 @@ export const WizardModal: React.FC<WizardModalProps> = ({
           </div>
           
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-            {/* Sync from Peduli WNI (Official & Proper presales naming) */}
+            {/* Sync from Peduli WNI (Official & Proper presales naming - Step by Step) */}
             <button
               onClick={handleAutoFill}
               type="button"
               className="px-2.5 py-1.5 rounded-lg bg-amber-100/90 hover:bg-amber-200 text-amber-950 text-[11px] sm:text-xs font-bold flex items-center gap-1 transition-all shadow-xs cursor-pointer"
-              title="Sync registration data from Peduli WNI"
+              title="Sync registration data for current step"
             >
               <Sparkles className="w-3.5 h-3.5 text-sunny-goldHover" />
-              <span className="hidden sm:inline">{t.wizard.autoFillBtn}</span>
-              <span className="sm:hidden">Sync Data</span>
+              <span className="hidden sm:inline">
+                {currentStep === 1 
+                  ? (lang === 'en' ? '⚡ Sync Identity (Step 1)' : '⚡ Sinkronisasi Identitas') 
+                  : currentStep === 2 
+                  ? (lang === 'en' ? '⚡ Sync Documents (Step 2)' : '⚡ Sinkronisasi Berkas') 
+                  : (lang === 'en' ? '⚡ Auto-Select Slot' : '⚡ Pilih Slot Otomatis')}
+              </span>
+              <span className="sm:hidden">
+                {currentStep === 1 ? 'Sync Step 1' : currentStep === 2 ? 'Sync Step 2' : 'Select Slot'}
+              </span>
             </button>
 
             <button

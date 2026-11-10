@@ -67,11 +67,11 @@ export const translations = {
       closeBtn: "Close Tracker"
     },
     wizard: {
-      step1Title: "1. Identity",
+      step1Title: "Identity",
       step1Desc: "Personal & German contact data",
-      step2Title: "2. Documents",
+      step2Title: "Documents",
       step2Desc: "Service requirements upload",
-      step3Title: "3. Termin",
+      step3Title: "Termin",
       step3Desc: "Select date & time termin",
       fullName: "Full Legal Name (as shown in Passport)",
       nik: "NIK (16-digit ID) or Old Passport Number",
@@ -225,11 +225,11 @@ export const translations = {
       closeBtn: "Tutup Pelacakan"
     },
     wizard: {
-      step1Title: "1. Identitas",
+      step1Title: "Identitas",
       step1Desc: "Data pribadi & kontak Jerman",
-      step2Title: "2. Dokumen",
+      step2Title: "Dokumen",
       step2Desc: "Unggah berkas spesifik layanan",
-      step3Title: "3. Termin",
+      step3Title: "Termin",
       step3Desc: "Pilih tanggal & jam termin",
       fullName: "Nama Lengkap Resmi (sesuai paspor)",
       nik: "NIK (16 Digit) atau Nomor Paspor Lama",
