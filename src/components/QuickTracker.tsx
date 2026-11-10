@@ -7,11 +7,13 @@ interface QuickTrackerProps {
   lang: Language;
   onSearch: (refCode: string) => void;
   recentApplications: ApplicationRecord[];
+  currentUser: { name: string; email: string } | null;
 }
 
 export const QuickTracker: React.FC<QuickTrackerProps> = ({
   lang,
   onSearch,
+  currentUser,
 }) => {
   const t = translations[lang];
   const [inputVal, setInputVal] = useState('');
@@ -82,34 +84,36 @@ export const QuickTracker: React.FC<QuickTrackerProps> = ({
             </div>
           )}
 
-          {/* Quick Demo Pill Links */}
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center gap-2 flex-wrap text-xs text-slate-500">
-            <span className="flex items-center gap-1 text-slate-400">
-              <Sparkles className="w-3 h-3 text-sunny-gold" />
-              Demo Samples:
-            </span>
-            <button
-              type="button"
-              onClick={() => handleSampleClick('FRA-2026-8812')}
-              className="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors"
-            >
-              FRA-2026-8812 (Printing)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSampleClick('FRA-2026-7731')}
-              className="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors"
-            >
-              FRA-2026-7731 (Verified)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSampleClick('FRA-2026-9041')}
-              className="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors"
-            >
-              FRA-2026-9041 (Ready)
-            </button>
-          </div>
+          {/* Quick Demo Pill Links - ONLY SHOWN WHEN USER IS LOGGED IN */}
+          {currentUser && (
+            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center gap-2 flex-wrap text-xs text-slate-500 animate-fadeIn">
+              <span className="flex items-center gap-1 text-slate-400">
+                <Sparkles className="w-3 h-3 text-sunny-gold" />
+                Demo Samples:
+              </span>
+              <button
+                type="button"
+                onClick={() => handleSampleClick('FRA-2026-8812')}
+                className="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors"
+              >
+                FRA-2026-8812 (Printing)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSampleClick('FRA-2026-7731')}
+                className="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors"
+              >
+                FRA-2026-7731 (Verified)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSampleClick('FRA-2026-9041')}
+                className="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors"
+              >
+                FRA-2026-9041 (Ready)
+              </button>
+            </div>
+          )}
 
         </div>
 

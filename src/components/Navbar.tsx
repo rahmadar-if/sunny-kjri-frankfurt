@@ -30,7 +30,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           <a href="#" className="flex items-center gap-3 group">
             <div className="w-11 h-11 rounded-xl bg-sunny-navy flex items-center justify-center p-2 shadow-sm text-sunny-gold group-hover:scale-105 transition-transform">
               {/* Garuda / Consular Emblem Icon */}
-              <ShieldCheck className="w-7 h-7 text-sunny-gold" />
+              {/* <ShieldCheck className="w-7 h-7 text-sunny-gold" /> */}
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/9/90/National_emblem_of_Indonesia_Garuda_Pancasila.svg"
+                alt="Garuda Icon"
+                className="w-7 h-7"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-lg sm:text-xl tracking-tight text-sunny-navy leading-none">

@@ -43,23 +43,23 @@ export const Hero: React.FC<HeroProps> = ({
         </p>
 
         {/* 2 Main Action Buttons (Minimalist & Direct) */}
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 max-w-md mx-auto">
           
           {/* Button 1: Book Passport Appointment */}
           <button
             onClick={onBookClick}
             className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white font-bold text-sm sm:text-base shadow-sm hover:shadow-lg transition-all flex items-center justify-center gap-2.5 group active:scale-95 border border-sunny-navy cursor-pointer"
           >
-            <Calendar className="w-4 h-4 text-sunny-gold group-hover:scale-110 transition-transform" />
+            <Calendar className="w-8 h-8 text-sunny-gold group-hover:scale-110 transition-transform" />
             <span>{t.hero.btnPrimary}</span>
           </button>
 
           {/* Button 2: Track Application */}
           <button
             onClick={onTrackClick}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-sunny-navy font-bold text-sm sm:text-base border border-slate-200/90 shadow-sm hover:shadow transition-all flex items-center justify-center gap-2.5 active:scale-95 cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-25 text-slate-700 hover:text-sunny-navy font-bold text-sm sm:text-base border border-slate-200/90 shadow-sm hover:shadow transition-all flex items-center justify-center gap-2.5 active:scale-95 cursor-pointer"
           >
-            <Search className="w-4 h-4 text-slate-500" />
+            <Search className="w-8 h-8 text-slate-500 group-hover:scale-110 transition-transform" />
             <span>{t.hero.btnSecondary}</span>
           </button>
 
@@ -71,7 +71,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
               
               {/* Stat 1: Consular Jurisdiction */}
-              <div className="p-3.5 sm:px-5 flex items-center gap-3.5 text-left group hover:bg-slate-50/70 rounded-xl transition-colors">
+              <div className="p-3.5 sm:px-5 flex items-center gap-3.5 text-left group hover:bg-slate-25/70 rounded-xl transition-colors">
                 <div className="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200/60 text-sunny-gold flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
                   <MapPin className="w-5 h-5 text-sunny-goldHover" />
                 </div>

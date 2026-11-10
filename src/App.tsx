@@ -21,6 +21,9 @@ export function App() {
   // Authenticated User State
   const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(null);
 
+  // Pending service for redirection after login
+  const [pendingService, setPendingService] = useState<ServiceItem | null>(null);
+
   // Modal States
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
@@ -41,25 +44,37 @@ export function App() {
 
   const handleSignOut = () => {
     setCurrentUser(null);
+    setPendingService(null);
   };
 
   const handleLoginSuccess = (user: { name: string; email: string }) => {
     setCurrentUser(user);
+    setIsAuthOpen(false);
+
+    // If user attempted to apply for a service before logging in, immediately launch the wizard!
+    if (pendingService) {
+      setSelectedService(pendingService);
+      setPendingService(null);
+    }
   };
 
+  // Enforce authentication gate: User MUST be logged in before applying
   const handleSelectService = (service: ServiceItem) => {
-    // If not logged in, prompt auth first or directly open the wizard
+    if (!currentUser) {
+      setPendingService(service);
+      setIsAuthOpen(true);
+      return;
+    }
     setSelectedService(service);
   };
 
   const handleBookFromHero = () => {
-    // Scroll smoothly to service catalog
-    const elem = document.getElementById('services');
-    if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      setSelectedService(servicesData[0]);
+    if (!currentUser) {
+      setPendingService(servicesData[0]);
+      setIsAuthOpen(true);
+      return;
     }
+    setSelectedService(servicesData[0]);
   };
 
   const handleTrackFromHero = () => {
@@ -116,7 +131,7 @@ export function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
-      {/* Sticky Navigation & Top Ribbon */}
+      {/* Sticky Navigation */}
       <Navbar
         lang={lang}
         onToggleLang={handleToggleLang}
@@ -145,6 +160,7 @@ export function App() {
           lang={lang}
           onSearch={handleSearchTracking}
           recentApplications={applications}
+          currentUser={currentUser}
         />
 
         {/* Categorized FAQ Section with Search */}
@@ -162,7 +178,10 @@ export function App() {
         lang={lang}
         service={selectedService}
         isOpen={Boolean(selectedService)}
-        onClose={() => setSelectedService(null)}
+        onClose={() => {
+          setSelectedService(null);
+          setPendingService(null);
+        }}
         onSubmitSuccess={handleWizardSubmitSuccess}
         currentUser={currentUser}
       />
@@ -191,7 +210,10 @@ export function App() {
       <AuthModal
         lang={lang}
         isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
+        onClose={() => {
+          setIsAuthOpen(false);
+          setPendingService(null);
+        }}
         onLoginSuccess={handleLoginSuccess}
       />
     </div>
