@@ -5,7 +5,6 @@ import {
   MapPin, 
   Calendar, 
   CheckSquare, 
-  ShieldCheck,
   CreditCard
 } from 'lucide-react';
 import { Language, ApplicationRecord } from '../types';
@@ -39,28 +38,13 @@ export const ETicketModal: React.FC<ETicketModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         
-        {/* Header Ribbon */}
-        <div className="px-6 py-4 bg-sunny-navy text-white flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sunny-gold">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-[10px] font-bold tracking-wider uppercase text-amber-300 block">
-                Official Consular Document
-              </span>
-              <h3 className="font-extrabold text-sm sm:text-base tracking-tight">
-                {t.eticket.title}
-              </h3>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+        {/* Top Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
         {/* Printable Ticket Area */}
         <div id="printable-ticket" className="p-6 overflow-y-auto space-y-5 bg-white text-slate-800">

@@ -23,32 +23,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const t = translations[lang];
 
   return (
-    <>
-      {/* Clean Top Announcement Ribbon */}
-      <div className="bg-amber-50/90 border-b border-amber-200/60 text-slate-800 text-xs py-2 px-4 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 flex-wrap text-center sm:text-left">
-          <div className="flex items-center gap-2 mx-auto sm:mx-0">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-950 font-bold text-[10px] tracking-wide uppercase">
-              {t.ribbon.tag}
-            </span>
-            <span className="text-slate-700 font-medium">
-              {t.ribbon.text}
-            </span>
-          </div>
-          <a
-            href="https://peduliwni.kemlu.go.id"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-amber-800 hover:text-amber-950 font-semibold text-xs flex items-center gap-1 mx-auto sm:mx-0 transition-colors"
-          >
-            {t.ribbon.linkText}
-          </a>
-        </div>
-      </div>
-
-      {/* Main Sticky Navbar */}
-      <header className="sticky top-[33px] z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
           {/* Brand Logo & Diplomatic Seal */}
           <a href="#" className="flex items-center gap-3 group">
@@ -152,6 +128,5 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         </div>
       </header>
-    </>
   );
 };
