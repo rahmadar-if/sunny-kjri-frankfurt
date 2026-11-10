@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Mail, Lock, Phone, Sparkles, ArrowRight } from 'lucide-react';
+import { X, User, Mail, Lock, Phone, ArrowRight, ShieldCheck } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../data/translations';
 
@@ -28,13 +28,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onLoginSuccess({
-      name: name || (isRegister ? 'Pemohon Baru' : 'Budi Santoso'),
+      name: name || (isRegister ? 'Pemohon Terdaftar' : 'Budi Santoso'),
       email: email || 'budi.santoso@example.de',
     });
     onClose();
   };
 
-  const handleDemoLogin = () => {
+  const handleVerifiedWniLogin = () => {
     onLoginSuccess({
       name: 'Budi Santoso',
       email: 'budi.santoso@example.de',
@@ -43,40 +43,41 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn overflow-y-auto">
       <div 
-        className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden animate-modal-enter"
+        className="bg-white rounded-2xl sm:rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden my-auto animate-modal-enter"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Header */}
-        <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+        <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
           <div>
-            <h3 className="font-extrabold text-lg text-sunny-navy">
+            <h3 className="font-extrabold text-base sm:text-lg text-sunny-navy">
               {isRegister ? t.auth.registerTitle : t.auth.loginTitle}
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
               {t.auth.subtitle}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+            aria-label="Close"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-4">
+        <div className="p-5 sm:p-6 space-y-4">
           
-          {/* Demo Login Quick Shortcut */}
+          {/* Institutional Verified ID Quick Access */}
           <button
             type="button"
-            onClick={handleDemoLogin}
-            className="w-full py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200/90 text-amber-950 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-none hover:shadow-sm"
+            onClick={handleVerifiedWniLogin}
+            className="w-full py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100/90 border border-amber-200/90 text-amber-950 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-none hover:shadow-xs cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-sunny-goldHover" />
+            <ShieldCheck className="w-4 h-4 text-sunny-goldHover" />
             <span>{t.auth.demoLoginBtn}</span>
           </button>
 
@@ -161,7 +162,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <button
               type="submit"
-              className="w-full py-3 px-4 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all mt-4 active:scale-95 shadow-sm"
+              className="w-full py-3 px-4 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all mt-4 active:scale-95 shadow-sm cursor-pointer"
             >
               <span>{isRegister ? t.auth.btnSubmitRegister : t.auth.btnSubmitLogin}</span>
               <ArrowRight className="w-4 h-4 text-sunny-gold" />
@@ -173,7 +174,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={() => setIsRegister(!isRegister)}
-              className="text-xs text-slate-600 hover:text-sunny-navy font-semibold transition-colors"
+              className="text-xs text-slate-600 hover:text-sunny-navy font-semibold transition-colors cursor-pointer"
             >
               {isRegister ? t.auth.toggleToLogin : t.auth.toggleToRegister}
             </button>

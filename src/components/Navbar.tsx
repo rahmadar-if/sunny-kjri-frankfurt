@@ -24,24 +24,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           
           {/* Brand Logo & Diplomatic Seal */}
-          <a href="#" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-xl bg-sunny-navy flex items-center justify-center p-2 shadow-sm text-sunny-gold group-hover:scale-105 transition-transform">
-              {/* Garuda / Consular Emblem Icon */}
-              {/* <ShieldCheck className="w-7 h-7 text-sunny-gold" /> */}
+          <a href="#" className="flex items-center gap-2.5 sm:gap-3 group">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-sunny-navy flex items-center justify-center p-1.5 sm:p-2 shadow-sm text-sunny-gold group-hover:scale-105 transition-transform flex-shrink-0">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/9/90/National_emblem_of_Indonesia_Garuda_Pancasila.svg"
-                alt="Garuda Icon"
-                className="w-7 h-7"
+                alt="Garuda Emblem"
+                className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-lg sm:text-xl tracking-tight text-sunny-navy leading-none">
+              <span className="font-extrabold text-base sm:text-xl tracking-tight text-sunny-navy leading-none">
                 KJRI <span className="text-sunny-gold">FRANKFURT</span>
               </span>
-              <span className="text-[11px] font-medium text-slate-500 tracking-wide uppercase mt-1">
+              <span className="text-[10px] sm:text-[11px] font-medium text-slate-500 tracking-wide uppercase mt-0.5 sm:mt-1 hidden sm:block">
                 {t.nav.subtitle}
               </span>
             </div>

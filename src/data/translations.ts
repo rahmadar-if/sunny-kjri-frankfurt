@@ -11,7 +11,7 @@ export const translations = {
       services: "Services",
       tracker: "Track Status",
       faq: "FAQ",
-      appointment: "Termin Booking",
+      appointment: "Termin",
       contact: "Consulate Info",
       signIn: "Sign In",
       signOut: "Sign Out",
@@ -49,7 +49,8 @@ export const translations = {
       subtitle: "Enter your Booking Reference or Passport Number to track the live progress of your document.",
       placeholder: "e.g. FRA-2026-8812 or B1234567",
       btnCheck: "Check Status",
-      sampleHint: "Try sample booking codes: FRA-2026-8812 (In Production) or FRA-2026-7731 (Verified)",
+      quickRefLabel: "Quick Tracking Reference:",
+      sampleHint: "Active application reference examples: FRA-2026-8812 (In Production) or FRA-2026-7731 (Verified)",
       notFound: "No application record found for this reference code. Please verify your reference number.",
       modalTitle: "Application Progress Timeline",
       refLabel: "Reference Code",
@@ -66,11 +67,11 @@ export const translations = {
       closeBtn: "Close Tracker"
     },
     wizard: {
-      step1Title: "1. Applicant Identity",
+      step1Title: "1. Identity",
       step1Desc: "Personal & German contact data",
-      step2Title: "2. Documents & Details",
+      step2Title: "2. Documents",
       step2Desc: "Service requirements upload",
-      step3Title: "3. Appointment Slot",
+      step3Title: "3. Termin",
       step3Desc: "Select date & time termin",
       fullName: "Full Legal Name (as shown in Passport)",
       nik: "NIK (16-digit ID) or Old Passport Number",
@@ -80,7 +81,7 @@ export const translations = {
       passportType: "Passport Document Choice",
       epasport: "Electronic Passport (E-Paspor 48 Pages) — € 65",
       regpasport: "Ordinary Passport (Paspor Biasa 48 Pages) — € 25",
-      autoFillBtn: "⚡ Quick Auto-Fill Demo Data",
+      autoFillBtn: "⚡ Sync Peduli WNI Record",
       nextBtn: "Continue to Step 2",
       prevBtn: "Back",
       uploadTitle: "Required Document Checklist",
@@ -153,7 +154,7 @@ export const translations = {
       btnSubmitRegister: "Create Account",
       toggleToRegister: "Don't have an account yet? Register here",
       toggleToLogin: "Already have an account? Sign In",
-      demoLoginBtn: "⚡ Quick Demo Login (Budi Santoso)"
+      demoLoginBtn: "⚡ Single Sign-On Peduli WNI (Budi Santoso)"
     }
   },
   id: {
@@ -168,7 +169,7 @@ export const translations = {
       services: "Pelayanan",
       tracker: "Lacak Status",
       faq: "FAQ",
-      appointment: "Booking Termin",
+      appointment: "Termin",
       contact: "Info Konsulat",
       signIn: "Masuk",
       signOut: "Keluar",
@@ -206,7 +207,8 @@ export const translations = {
       subtitle: "Masukkan Nomor Registrasi / Kode Booking atau Nomor Paspor untuk memantau proses berkas Anda secara langsung.",
       placeholder: "Contoh: FRA-2026-8812 atau B1234567",
       btnCheck: "Periksa Status",
-      sampleHint: "Coba contoh kode booking: FRA-2026-8812 (Sedang Dicetak) atau FRA-2026-7731 (Berkas Terverifikasi)",
+      quickRefLabel: "Referensi Pelacakan Cepat:",
+      sampleHint: "Contoh nomor registrasi aktif: FRA-2026-8812 (Proses Cetak) atau FRA-2026-7731 (Terverifikasi)",
       notFound: "Nomor permohonan tidak ditemukan. Mohon pastikan kembali kode booking yang Anda masukkan.",
       modalTitle: "Linimasa Progres Permohonan",
       refLabel: "Kode Registrasi",
@@ -223,11 +225,11 @@ export const translations = {
       closeBtn: "Tutup Pelacakan"
     },
     wizard: {
-      step1Title: "1. Identitas Pemohon",
+      step1Title: "1. Identitas",
       step1Desc: "Data pribadi & kontak Jerman",
-      step2Title: "2. Dokumen & Persyaratan",
+      step2Title: "2. Dokumen",
       step2Desc: "Unggah berkas spesifik layanan",
-      step3Title: "3. Slot Janji Temu",
+      step3Title: "3. Termin",
       step3Desc: "Pilih tanggal & jam termin",
       fullName: "Nama Lengkap Resmi (sesuai paspor)",
       nik: "NIK (16 Digit) atau Nomor Paspor Lama",
@@ -237,7 +239,7 @@ export const translations = {
       passportType: "Pilihan Jenis Dokumen Paspor",
       epasport: "Paspor Elektronik (E-Paspor 48 Halaman) — € 65",
       regpasport: "Paspor Biasa (48 Halaman) — € 25",
-      autoFillBtn: "⚡ Isi Cepat Data Demo",
+      autoFillBtn: "⚡ Sinkronisasi Data Peduli WNI",
       nextBtn: "Lanjut ke Langkah 2",
       prevBtn: "Kembali",
       uploadTitle: "Daftar Unggahan Berkas Persyaratan",
@@ -310,7 +312,7 @@ export const translations = {
       btnSubmitRegister: "Daftar Akun",
       toggleToRegister: "Belum memiliki akun? Daftar di sini",
       toggleToLogin: "Sudah memiliki akun? Masuk sekarang",
-      demoLoginBtn: "⚡ Masuk Cepat Demo (Budi Santoso)"
+      demoLoginBtn: "⚡ Masuk Cepat Akun WNI Terverifikasi (Budi Santoso)"
     }
   }
 };

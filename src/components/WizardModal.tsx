@@ -56,7 +56,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
   const [germanAddress, setGermanAddress] = useState('');
   const [passportType, setPassportType] = useState<'electronic' | 'ordinary'>('electronic');
 
-  // Step 2 Form Data - INITIALIZED EMPTY AS REQUIRED
+  // Step 2 Form Data - INITIALIZED EMPTY (Mandatory files required before proceeding)
   const [peduliWniChecked, setPeduliWniChecked] = useState(false);
   const [peduliWniRef, setPeduliWniRef] = useState('');
   const [policeReportNo, setPoliceReportNo] = useState('');
@@ -100,7 +100,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
     });
   };
 
-  // Auto-fill dummy data ONLY when user explicitly clicks the demo button
+  // Sync / Pre-fill from Peduli WNI Record (Proper Institutional Naming)
   const handleAutoFill = () => {
     setFullName(currentUser?.name || 'Budi Santoso');
     setNik('3273012304910002');
@@ -241,7 +241,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
     { date: '2026-11-23', day: 'Monday / Senin' },
   ];
 
-  // Render individual document upload row with real file picker
+  // Render individual document upload row with real file picker & mobile responsiveness
   const renderDocUploadRow = (
     key: string, 
     titleEn: string, 
@@ -255,7 +255,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
     return (
       <div 
         key={key}
-        className={`p-3.5 rounded-2xl border transition-all ${
+        className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all ${
           uploaded 
             ? 'bg-emerald-50/40 border-emerald-200' 
             : 'bg-white border-slate-200/90 hover:border-slate-300'
@@ -263,35 +263,35 @@ export const WizardModal: React.FC<WizardModalProps> = ({
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Left info */}
-          <div className="flex items-start gap-3">
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${
+          <div className="flex items-start gap-2.5 sm:gap-3 flex-1 min-w-0">
+            <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${
               uploaded ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'
             }`}>
-              {uploaded ? <FileCheck className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
+              {uploaded ? <FileCheck className="w-4 h-4 sm:w-5 sm:h-5" /> : <FileText className="w-4 h-4 sm:w-5 sm:h-5" />}
             </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-bold text-xs sm:text-sm text-slate-800">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="font-bold text-xs sm:text-sm text-slate-800 leading-tight">
                   {title}
                 </span>
                 {isMandatory ? (
-                  <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-red-100 text-red-700 uppercase tracking-wide">
+                  <span className="text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-red-100 text-red-700 uppercase tracking-wide">
                     {lang === 'en' ? '* Mandatory' : '* Wajib'}
                   </span>
                 ) : (
-                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
+                  <span className="text-[9px] sm:text-[10px] font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
                     {lang === 'en' ? 'Optional' : 'Opsional'}
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 leading-snug">
                 {subtitle}
               </p>
 
               {/* Uploaded state pill */}
               {uploaded && (
-                <div className="mt-1.5 flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold text-emerald-800 truncate max-w-[200px]">
+                <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-mono font-bold text-emerald-800 truncate max-w-[180px] sm:max-w-[220px]">
                     {uploaded.name}
                   </span>
                   <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-200/70 text-emerald-900">
@@ -302,11 +302,11 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             </div>
           </div>
 
-          {/* Right action button (Native file input) */}
-          <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
+          {/* Right action button (Native file input) - full width on mobile */}
+          <div className="flex items-center gap-2 self-stretch sm:self-center flex-shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
             {uploaded ? (
-              <>
-                <label className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer transition-colors flex items-center gap-1">
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <label className="flex-1 sm:flex-initial px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer transition-colors flex items-center justify-center gap-1">
                   <Upload className="w-3.5 h-3.5" />
                   <span>{lang === 'en' ? 'Replace' : 'Ganti'}</span>
                   <input
@@ -319,14 +319,14 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                 <button
                   type="button"
                   onClick={() => handleRemoveFile(key)}
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                   title="Remove file"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
-              </>
+              </div>
             ) : (
-              <label className="px-3.5 py-2 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm hover:shadow transition-all active:scale-95">
+              <label className="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm hover:shadow transition-all active:scale-95">
                 <Upload className="w-3.5 h-3.5 text-sunny-gold" />
                 <span>{lang === 'en' ? 'Upload from Storage' : 'Unggah dari Perangkat'}</span>
                 <input
@@ -344,57 +344,59 @@ export const WizardModal: React.FC<WizardModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn overflow-y-auto">
       <div 
-        className="bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] animate-modal-enter"
+        className="bg-white rounded-2xl sm:rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col my-auto max-h-[94dvh] animate-modal-enter relative"
         onClick={(e) => e.stopPropagation()}
       >
         
         {/* Top Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80">
-          <div>
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80 flex-shrink-0">
+          <div className="flex-1 min-w-0 pr-2">
             <span className="text-[10px] font-bold uppercase tracking-wider text-sunny-gold block">
               Consular Application Wizard
             </span>
-            <h3 className="font-extrabold text-base sm:text-lg text-sunny-navy">
+            <h3 className="font-extrabold text-sm sm:text-lg text-sunny-navy truncate">
               {lang === 'en' ? service.titleEn : service.titleId}
             </h3>
           </div>
           
-          <div className="flex items-center gap-2">
-            {/* Auto fill helper for demonstration */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* Sync from Peduli WNI (Official & Proper presales naming) */}
             <button
               onClick={handleAutoFill}
               type="button"
-              className="px-2.5 py-1.5 rounded-lg bg-amber-100/80 hover:bg-amber-200/80 text-amber-900 text-xs font-bold flex items-center gap-1 transition-all"
-              title="Click to quickly fill sample data for testing"
+              className="px-2.5 py-1.5 rounded-lg bg-amber-100/90 hover:bg-amber-200 text-amber-950 text-[11px] sm:text-xs font-bold flex items-center gap-1 transition-all shadow-xs cursor-pointer"
+              title="Sync registration data from Peduli WNI"
             >
               <Sparkles className="w-3.5 h-3.5 text-sunny-goldHover" />
               <span className="hidden sm:inline">{t.wizard.autoFillBtn}</span>
+              <span className="sm:hidden">Sync Data</span>
             </button>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
+              aria-label="Close"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* 3-Step Simple Progress Tabs */}
-        <div className="px-6 py-3 bg-white border-b border-slate-100">
-          <div className="grid grid-cols-3 gap-2">
+        {/* 3-Step Simple Progress Tabs - Mobile Optimized */}
+        <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white border-b border-slate-100 flex-shrink-0">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center sm:text-left">
             
             {/* Step 1 Tab */}
-            <div className={`flex items-center gap-2 pb-1.5 border-b-2 text-xs font-bold transition-colors ${
+            <div className={`flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 pb-1.5 border-b-2 text-xs font-bold transition-colors ${
               currentStep === 1 
                 ? 'border-sunny-navy text-sunny-navy' 
                 : currentStep > 1 
                 ? 'border-emerald-500 text-emerald-600' 
                 : 'border-slate-200 text-slate-400'
             }`}>
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] ${
+              <div className={`w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] flex-shrink-0 ${
                 currentStep > 1 ? 'bg-emerald-500 text-white' : currentStep === 1 ? 'bg-sunny-navy text-white' : 'bg-slate-200 text-slate-500'
               }`}>
                 {currentStep > 1 ? <Check className="w-3 h-3" /> : '1'}
@@ -403,14 +405,14 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             </div>
 
             {/* Step 2 Tab */}
-            <div className={`flex items-center gap-2 pb-1.5 border-b-2 text-xs font-bold transition-colors ${
+            <div className={`flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 pb-1.5 border-b-2 text-xs font-bold transition-colors ${
               currentStep === 2 
                 ? 'border-sunny-navy text-sunny-navy' 
                 : currentStep > 2 
                 ? 'border-emerald-500 text-emerald-600' 
                 : 'border-slate-200 text-slate-400'
             }`}>
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] ${
+              <div className={`w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] flex-shrink-0 ${
                 currentStep > 2 ? 'bg-emerald-500 text-white' : currentStep === 2 ? 'bg-sunny-navy text-white' : 'bg-slate-200 text-slate-500'
               }`}>
                 {currentStep > 2 ? <Check className="w-3 h-3" /> : '2'}
@@ -419,12 +421,12 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             </div>
 
             {/* Step 3 Tab */}
-            <div className={`flex items-center gap-2 pb-1.5 border-b-2 text-xs font-bold transition-colors ${
+            <div className={`flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 pb-1.5 border-b-2 text-xs font-bold transition-colors ${
               currentStep === 3 
                 ? 'border-sunny-navy text-sunny-navy' 
                 : 'border-slate-200 text-slate-400'
             }`}>
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] ${
+              <div className={`w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] flex-shrink-0 ${
                 currentStep === 3 ? 'bg-sunny-navy text-white' : 'bg-slate-200 text-slate-500'
               }`}>
                 3
@@ -436,11 +438,11 @@ export const WizardModal: React.FC<WizardModalProps> = ({
         </div>
 
         {/* Form Body Scrollable */}
-        <div className="p-6 overflow-y-auto space-y-5 flex-1">
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-4 sm:space-y-5 flex-1">
           
           {/* Validation Notice if Error */}
           {validationError && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-2 animate-shake">
+            <div className="p-3 sm:p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-2 animate-shake">
               <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-600" />
               <span>{validationError}</span>
             </div>
@@ -448,8 +450,8 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
           {/* STEP 1: IDENTITY & CONTACT */}
           {currentStep === 1 && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-3.5 sm:space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     {t.wizard.fullName} <span className="text-red-500">*</span>
@@ -477,7 +479,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     {t.wizard.email} <span className="text-red-500">*</span>
@@ -524,8 +526,8 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                   <label className="block text-xs font-bold text-slate-700 mb-2">
                     {t.wizard.passportType}
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <label className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+                    <label className={`flex items-start gap-2.5 sm:gap-3 p-3 sm:p-3.5 rounded-xl border cursor-pointer transition-all ${
                       passportType === 'electronic'
                         ? 'border-sunny-navy bg-slate-50/80 ring-1 ring-sunny-navy/20'
                         : 'border-slate-200 hover:border-slate-300'
@@ -541,13 +543,13 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                         <span className="font-bold text-xs sm:text-sm text-sunny-navy block">
                           Electronic Passport (E-Paspor)
                         </span>
-                        <span className="text-[11px] text-slate-500 block">
+                        <span className="text-[10px] sm:text-[11px] text-slate-500 block">
                           48 Pages with Biometric Chip — € 65
                         </span>
                       </div>
                     </label>
 
-                    <label className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    <label className={`flex items-start gap-2.5 sm:gap-3 p-3 sm:p-3.5 rounded-xl border cursor-pointer transition-all ${
                       passportType === 'ordinary'
                         ? 'border-sunny-navy bg-slate-50/80 ring-1 ring-sunny-navy/20'
                         : 'border-slate-200 hover:border-slate-300'
@@ -563,7 +565,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                         <span className="font-bold text-xs sm:text-sm text-sunny-navy block">
                           Ordinary Passport (Paspor Biasa)
                         </span>
-                        <span className="text-[11px] text-slate-500 block">
+                        <span className="text-[10px] sm:text-[11px] text-slate-500 block">
                           48 Standard Pages — € 25
                         </span>
                       </div>
@@ -574,12 +576,12 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             </div>
           )}
 
-          {/* STEP 2: DOCUMENTS & DYNAMIC REQUIREMENTS (EMPTY BY DEFAULT, UPLOAD FROM STORAGE) */}
+          {/* STEP 2: DOCUMENTS & DYNAMIC REQUIREMENTS (MANDATORY UPLOADS REQUIRED) */}
           {currentStep === 2 && (
-            <div className="space-y-5">
+            <div className="space-y-4 sm:space-y-5">
               
               {/* Mandatory Peduli WNI check */}
-              <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+              <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-50/70 border border-amber-200/80">
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
@@ -591,14 +593,14 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     <span className="text-xs sm:text-sm font-bold text-amber-950 block">
                       {t.wizard.peduliWniCheck} <span className="text-red-500">*</span>
                     </span>
-                    <span className="text-[11px] text-amber-800 block mt-0.5">
+                    <span className="text-[10px] sm:text-[11px] text-amber-800 block mt-0.5">
                       Lapor diri is mandatory under Indonesian Consular Regulation.
                     </span>
                   </div>
                 </label>
                 
                 {peduliWniChecked && (
-                  <div className="mt-3 pl-7">
+                  <div className="mt-2.5 sm:mt-3 pl-7">
                     <input
                       type="text"
                       value={peduliWniRef}
@@ -612,7 +614,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
               {/* Conditional Lost Passport Fields */}
               {service.id === 'passport-lost' && (
-                <div className="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 space-y-3">
+                <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50/70 border border-rose-200/80 space-y-2.5">
                   <div className="flex items-center gap-2 text-rose-800 text-xs font-bold uppercase tracking-wide">
                     <ShieldAlert className="w-4 h-4 text-rose-600" />
                     <span>German Police Loss Report Required</span>
@@ -634,7 +636,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
               {/* Conditional Damaged Passport Fields */}
               {service.id === 'passport-damaged' && (
-                <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/80 space-y-2">
+                <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-50/50 border border-amber-200/80 space-y-2">
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     {t.wizard.damageExplanation} <span className="text-red-500">*</span>
                   </label>
@@ -650,16 +652,16 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
               {/* Upload Checklist */}
               <div>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2.5">
                   <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">
                     {t.wizard.uploadTitle}
                   </span>
-                  <span className="text-[11px] text-slate-400">
-                    PDF, JPG, PNG (Max 5MB)
+                  <span className="text-[10px] sm:text-[11px] text-slate-400">
+                    PDF, JPG, PNG (&lt; 5MB)
                   </span>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   
                   {/* File 1: Old Passport (if not lost) */}
                   {service.id !== 'passport-lost' && renderDocUploadRow(
@@ -723,16 +725,16 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
           {/* STEP 3: CALENDAR & TIME-SLOT APPOINTMENT */}
           {currentStep === 3 && (
-            <div className="space-y-5">
+            <div className="space-y-4 sm:space-y-5">
               
               {/* Info banner */}
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/90 text-xs text-slate-600">
+              <div className="flex items-start gap-2.5 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/90 text-xs text-slate-600">
                 <Info className="w-4 h-4 text-sunny-navy mt-0.5 flex-shrink-0" />
                 <div>
                   <span className="font-bold text-slate-800 block mb-0.5">
                     {t.wizard.calendarTitle}
                   </span>
-                  <span>{t.wizard.calendarDesc}</span>
+                  <span className="text-[11px] sm:text-xs leading-snug">{t.wizard.calendarDesc}</span>
                 </div>
               </div>
 
@@ -741,7 +743,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                 <label className="block text-xs font-bold text-slate-700 mb-2">
                   {t.wizard.selectDate}
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5">
                   {availableDates.map((item) => {
                     const isSelected = selectedDate === item.date;
                     return (
@@ -749,17 +751,17 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                         key={item.date}
                         type="button"
                         onClick={() => setSelectedDate(item.date)}
-                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                        className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all cursor-pointer ${
                           isSelected
-                            ? 'border-sunny-navy bg-slate-50/90 ring-2 ring-sunny-navy/20 shadow-sm'
+                            ? 'border-sunny-navy bg-slate-50/90 ring-2 ring-sunny-navy/20 shadow-xs'
                             : 'border-slate-200 hover:border-slate-300 bg-white'
                         }`}
                       >
                         <div className="flex items-center gap-1.5 text-sunny-navy font-extrabold text-xs sm:text-sm">
-                          <CalendarIcon className="w-3.5 h-3.5 text-sunny-goldHover" />
-                          <span>{item.date}</span>
+                          <CalendarIcon className="w-3.5 h-3.5 text-sunny-goldHover flex-shrink-0" />
+                          <span className="truncate">{item.date}</span>
                         </div>
-                        <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
+                        <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium block mt-0.5 truncate">
                           {item.day}
                         </span>
                       </button>
@@ -774,8 +776,8 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                   <label className="text-xs font-bold text-slate-700">
                     {t.wizard.selectSlot}
                   </label>
-                  <span className="text-[11px] text-slate-400">
-                    KJRI Frankfurt Time (CET)
+                  <span className="text-[10px] sm:text-[11px] text-slate-400">
+                    KJRI Frankfurt (CET)
                   </span>
                 </div>
 
@@ -789,22 +791,22 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                         type="button"
                         disabled={isFull}
                         onClick={() => setSelectedSlot(slot)}
-                        className={`p-2.5 rounded-xl border text-left transition-all ${
+                        className={`p-2 sm:p-2.5 rounded-xl border text-left transition-all ${
                           isFull
                             ? 'border-slate-200 bg-slate-100/60 text-slate-400 cursor-not-allowed opacity-60'
                             : isSelected
-                            ? 'border-sunny-navy bg-sunny-navy text-white shadow-sm'
+                            ? 'border-sunny-navy bg-sunny-navy text-white shadow-xs'
                             : 'border-slate-200 bg-white hover:border-slate-300 text-slate-700 cursor-pointer'
                         }`}
                       >
                         <div className="flex items-center justify-between text-xs font-bold">
-                          <span className="flex items-center gap-1">
-                            <Clock className={`w-3 h-3 ${isSelected ? 'text-sunny-gold' : 'text-slate-400'}`} />
+                          <span className="flex items-center gap-1 truncate">
+                            <Clock className={`w-3 h-3 flex-shrink-0 ${isSelected ? 'text-sunny-gold' : 'text-slate-400'}`} />
                             {slot.replace(' CET', '')}
                           </span>
                         </div>
-                        <span className={`text-[10px] block mt-0.5 ${
-                          isSelected ? 'text-amber-200' : isFull ? 'text-slate-400' : 'text-emerald-600'
+                        <span className={`text-[9px] sm:text-[10px] block mt-0.5 truncate ${
+                          isSelected ? 'text-amber-200' : isFull ? 'text-slate-400' : 'text-emerald-600 font-semibold'
                         }`}>
                           {isFull ? t.wizard.fullyBooked : `4 ${t.wizard.slotsAvailable}`}
                         </span>
@@ -819,13 +821,13 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
         </div>
 
-        {/* Footer Navigation Buttons */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+        {/* Footer Navigation Buttons - Mobile Optimized */}
+        <div className="p-3 sm:px-6 sm:py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2 flex-shrink-0">
           {currentStep > 1 ? (
             <button
               type="button"
               onClick={() => setCurrentStep((prev) => (prev - 1) as 1 | 2)}
-              className="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-100 flex items-center gap-1.5 transition-all cursor-pointer"
+              className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-100 flex items-center gap-1.5 transition-all cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>{t.wizard.prevBtn}</span>
@@ -838,7 +840,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             <button
               type="button"
               onClick={handleNextStep1}
-              className="px-5 py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer ml-auto"
             >
               <span>{t.wizard.nextBtn}</span>
               <ArrowRight className="w-3.5 h-3.5 text-sunny-gold" />
@@ -849,7 +851,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             <button
               type="button"
               onClick={handleNextStep2}
-              className="px-5 py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer ml-auto"
             >
               <span>{lang === 'en' ? 'Continue to Termin' : 'Lanjut ke Jadwal Termin'}</span>
               <ArrowRight className="w-3.5 h-3.5 text-sunny-gold" />
@@ -860,7 +862,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             <button
               type="button"
               onClick={handleFinalSubmit}
-              className="px-6 py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center gap-2 transition-all shadow-sm active:scale-95 cursor-pointer ring-2 ring-sunny-gold/40"
+              className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center gap-2 transition-all shadow-sm active:scale-95 cursor-pointer ring-2 ring-sunny-gold/40 ml-auto"
             >
               <Check className="w-4 h-4 text-sunny-gold" />
               <span>{t.wizard.submitBtn}</span>
