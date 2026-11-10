@@ -50,7 +50,6 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
   const renderServiceCard = (service: ServiceItem) => {
     const isTerminOrOther = service.id === 'passport-appointment-only' || service.id === 'other-consular-services';
     const title = lang === 'en' ? service.titleEn : service.titleId;
-    const tag = lang === 'en' ? service.tagEn : service.tagId;
     const description = lang === 'en' ? service.descriptionEn : service.descriptionId;
 
     return (
@@ -59,20 +58,17 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
         className="relative flex flex-col justify-between bg-white rounded-2xl border border-slate-200/90 hover:border-slate-300 transition-all duration-200 p-5 sm:p-6 hover:shadow-card-hover"
       >
         <div>
-          {/* Top Bar: Icon & Tag */}
-          <div className="flex items-start justify-between gap-3 mb-3.5">
-            <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center flex-shrink-0">
+          {/* Icon & Title in 1 line */}
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center flex-shrink-0">
               {getServiceIcon(service.iconName)}
             </div>
-            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 truncate">
-              {tag}
-            </span>
+            <h3 className="text-base sm:text-lg font-bold text-sunny-navy leading-snug">
+              {title}
+            </h3>
           </div>
 
-          {/* Title & Description */}
-          <h3 className="text-base sm:text-lg font-bold text-sunny-navy mb-2 leading-snug">
-            {title}
-          </h3>
+          {/* Description */}
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
             {description}
           </p>
