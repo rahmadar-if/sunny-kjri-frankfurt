@@ -4,7 +4,6 @@ import {
   CalendarCheck2, 
   FileWarning, 
   AlertTriangle, 
-  CheckCircle2, 
   ArrowRight,
   FileSpreadsheet
 } from 'lucide-react';
@@ -48,29 +47,17 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
     ['passport-appointment-only', 'other-consular-services'].includes(s.id)
   );
 
-  const renderServiceCard = (service: ServiceItem, isPopular = false) => {
+  const renderServiceCard = (service: ServiceItem) => {
     const isTerminOrOther = service.id === 'passport-appointment-only' || service.id === 'other-consular-services';
     const title = lang === 'en' ? service.titleEn : service.titleId;
     const tag = lang === 'en' ? service.tagEn : service.tagId;
     const description = lang === 'en' ? service.descriptionEn : service.descriptionId;
-    const requirements = lang === 'en' ? service.requiredDocsEn : service.requiredDocsId;
 
     return (
       <div
         key={service.id}
-        className={`relative flex flex-col justify-between bg-white rounded-2xl border transition-all duration-200 p-5 sm:p-6 hover:shadow-card-hover ${
-          isPopular 
-            ? 'border-sunny-gold/70 ring-1 ring-sunny-gold/20 shadow-soft' 
-            : 'border-slate-200/90 hover:border-slate-300'
-        }`}
+        className="relative flex flex-col justify-between bg-white rounded-2xl border border-slate-200/90 hover:border-slate-300 transition-all duration-200 p-5 sm:p-6 hover:shadow-card-hover"
       >
-        {/* Popular Ribbon Tag */}
-        {isPopular && (
-          <div className="absolute -top-3.5 right-5 px-3 py-1 rounded-full bg-gradient-to-r from-sunny-gold to-amber-500 text-white text-[10px] sm:text-[11px] font-extrabold tracking-wide uppercase shadow-xs">
-            ★ {t.services.popularBadge}
-          </div>
-        )}
-
         <div>
           {/* Top Bar: Icon & Tag */}
           <div className="flex items-start justify-between gap-3 mb-3.5">
@@ -83,40 +70,23 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
           </div>
 
           {/* Title & Description */}
-          <h3 className="text-base sm:text-lg font-bold text-sunny-navy mb-1.5 leading-snug">
+          <h3 className="text-base sm:text-lg font-bold text-sunny-navy mb-2 leading-snug">
             {title}
           </h3>
-          <p className="text-xs text-slate-600 leading-relaxed mb-5 min-h-[36px]">
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
             {description}
           </p>
-
-          {/* Key Requirements List */}
-          <div className="bg-slate-50/70 rounded-xl p-3.5 border border-slate-100 mb-5">
-            <div className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-              {t.services.requirementsHeading}
-            </div>
-            <ul className="space-y-1.5">
-              {requirements.slice(0, 3).map((req, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-xs text-slate-600">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                  <span className="leading-snug">{req}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
         {/* Bottom Action Button */}
-        <div className="pt-3.5 border-t border-slate-100 mt-auto">
+        <div className="pt-4 border-t border-slate-100 mt-auto">
           {/* Trigger Button */}
           <button
             onClick={() => onSelectService(service)}
             className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
-              isPopular
-                ? 'bg-sunny-navy hover:bg-sunny-navyDark text-white shadow-xs hover:shadow active:scale-98'
-                : isTerminOrOther
+              isTerminOrOther
                 ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-xs hover:shadow active:scale-98'
-                : 'bg-slate-100 hover:bg-sunny-navy hover:text-white text-slate-800 active:scale-98'
+                : 'bg-sunny-navy hover:bg-sunny-navyDark text-white shadow-xs hover:shadow active:scale-98'
             }`}
           >
             <span>
@@ -158,7 +128,7 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {passportServices.map((service) => 
-              renderServiceCard(service, service.id === 'passport-expired')
+              renderServiceCard(service)
             )}
           </div>
         </div>
@@ -174,7 +144,7 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {bottomServices.map((service) => 
-              renderServiceCard(service, false)
+              renderServiceCard(service)
             )}
           </div>
         </div>
