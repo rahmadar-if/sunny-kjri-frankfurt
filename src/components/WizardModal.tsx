@@ -601,10 +601,10 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                       />
                       <div>
                         <span className="font-bold text-xs sm:text-sm text-sunny-navy block">
-                          Electronic Passport (E-Paspor)
+                          {lang === 'id' ? 'Paspor Elektronik (E-Paspor)' : 'Electronic Passport (E-Paspor)'}
                         </span>
                         <span className="text-[10px] sm:text-[11px] text-slate-500 block">
-                          48 Pages with Biometric Chip — € 65
+                          {lang === 'id' ? '48 Halaman dengan Chip Biometrik' : '48 Pages with Biometric Chip'}
                         </span>
                       </div>
                     </label>
@@ -623,10 +623,10 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                       />
                       <div>
                         <span className="font-bold text-xs sm:text-sm text-sunny-navy block">
-                          Ordinary Passport (Paspor Biasa)
+                          {lang === 'id' ? 'Paspor Biasa (Non-Elektronik)' : 'Ordinary Passport (Paspor Biasa)'}
                         </span>
                         <span className="text-[10px] sm:text-[11px] text-slate-500 block">
-                          48 Standard Pages — € 25
+                          {lang === 'id' ? '48 Halaman Standar' : '48 Standard Pages'}
                         </span>
                       </div>
                     </label>

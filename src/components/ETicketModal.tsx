@@ -84,7 +84,9 @@ export const ETicketModal: React.FC<ETicketModalProps> = ({
             <div>
               <span className="text-slate-400 block text-[10px] uppercase font-bold">Document Choice</span>
               <span className="font-bold text-sunny-navy text-xs">
-                {application.passportType === 'electronic' ? 'E-Paspor (Chip) € 65' : 'Paspor Biasa € 25'}
+                {application.passportType === 'electronic' 
+                  ? (lang === 'id' ? 'Paspor Elektronik (E-Paspor)' : 'Electronic Passport (E-Paspor)') 
+                  : (lang === 'id' ? 'Paspor Biasa' : 'Ordinary Passport')}
               </span>
             </div>
 

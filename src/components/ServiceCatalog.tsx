@@ -6,8 +6,6 @@ import {
   AlertTriangle, 
   CheckCircle2, 
   ArrowRight,
-  Euro,
-  Clock,
   FileSpreadsheet
 } from 'lucide-react';
 import { Language, ServiceItem } from '../types';
@@ -55,7 +53,6 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
     const title = lang === 'en' ? service.titleEn : service.titleId;
     const tag = lang === 'en' ? service.tagEn : service.tagId;
     const description = lang === 'en' ? service.descriptionEn : service.descriptionId;
-    const duration = lang === 'en' ? service.durationEn : service.durationId;
     const requirements = lang === 'en' ? service.requiredDocsEn : service.requiredDocsId;
 
     return (
@@ -109,36 +106,8 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
           </div>
         </div>
 
-        {/* Bottom Meta & Action Button */}
+        {/* Bottom Action Button */}
         <div className="pt-3.5 border-t border-slate-100 mt-auto">
-          <div className="flex items-center justify-between mb-3.5 flex-wrap gap-2">
-            {/* Fee */}
-            <div className="flex items-center gap-1.5">
-              <Euro className="w-4 h-4 text-slate-400" />
-              <div>
-                <span className="text-[10px] text-slate-400 block -mb-0.5">
-                  {t.services.feeLabel}
-                </span>
-                <span className="text-sm sm:text-base font-extrabold text-sunny-navy">
-                  {service.feeEur === 0 ? (lang === 'en' ? 'Termin Booking' : 'Gratis / Termin') : `€ ${service.feeEur}`}
-                </span>
-              </div>
-            </div>
-
-            {/* Processing Duration */}
-            <div className="flex items-center gap-1.5 text-right">
-              <Clock className="w-4 h-4 text-slate-400" />
-              <div>
-                <span className="text-[10px] text-slate-400 block -mb-0.5">
-                  {t.services.durationLabel}
-                </span>
-                <span className="text-xs font-semibold text-slate-600">
-                  {duration}
-                </span>
-              </div>
-            </div>
-          </div>
-
           {/* Trigger Button */}
           <button
             onClick={() => onSelectService(service)}
