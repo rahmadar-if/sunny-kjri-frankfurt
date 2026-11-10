@@ -40,7 +40,7 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
   };
 
   return (
-    <section id="services" className="py-16 sm:py-20 bg-white border-y border-slate-100">
+    <section id="services" className="py-16 sm:py-20 bg-white border-y border-slate-100 scroll-mt-16 sm:scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

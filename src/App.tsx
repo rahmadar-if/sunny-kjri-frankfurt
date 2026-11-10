@@ -68,13 +68,12 @@ export function App() {
     setSelectedService(service);
   };
 
+  // Scroll down smoothly to all consular services section
   const handleBookFromHero = () => {
-    if (!currentUser) {
-      setPendingService(servicesData[0]);
-      setIsAuthOpen(true);
-      return;
+    const elem = document.getElementById('services');
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth' });
     }
-    setSelectedService(servicesData[0]);
   };
 
   const handleTrackFromHero = () => {

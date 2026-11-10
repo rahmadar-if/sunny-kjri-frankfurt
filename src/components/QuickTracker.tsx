@@ -36,7 +36,7 @@ export const QuickTracker: React.FC<QuickTrackerProps> = ({
   };
 
   return (
-    <section id="tracker" className="py-12 sm:py-16 bg-[#F8FAFC]">
+    <section id="tracker" className="py-12 sm:py-16 bg-[#F8FAFC] scroll-mt-16 sm:scroll-mt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         
         {/* Header */}
