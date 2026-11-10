@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Search, ShieldCheck, Clock, MapPin, Sparkles } from 'lucide-react';
+import { Calendar, Search, ShieldCheck, Clock, MapPin } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../data/translations';
 
@@ -17,23 +17,18 @@ export const Hero: React.FC<HeroProps> = ({
   const t = translations[lang];
 
   return (
-    <section className="relative overflow-hidden pt-12 pb-16 lg:pt-16 lg:pb-24 bg-gradient-to-b from-white via-slate-50/50 to-[#F8FAFC]">
-      {/* Background Subtle Ambience Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-tr from-amber-100/30 via-slate-100/40 to-blue-50/30 blur-3xl pointer-events-none -z-10" />
+    <section 
+      className="relative overflow-hidden pt-12 pb-16 lg:pt-16 lg:pb-24 bg-top bg-no-repeat bg-cover border-b border-slate-100"
+      style={{
+        backgroundImage: "url('https://kemlu.go.id/assets/bg-tentang-CK76dm9Q.svg'), url('/bg-kemlu.svg')",
+        backgroundColor: '#FCFCFD'
+      }}
+    >
+      {/* Ambient gradient overlay for enhanced readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/80 to-[#F8FAFC] -z-10" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         
-        {/* Pill Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-sm text-xs font-semibold text-slate-700 mb-6 hover:border-sunny-gold/50 transition-colors">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-sunny-navy font-bold">{t.hero.badge}</span>
-          <span className="text-slate-300">|</span>
-          <span className="text-slate-500 flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-sunny-gold" />
-            KJRI Frankfurt am Main
-          </span>
-        </div>
-
         {/* Action-Driven Hero Headline */}
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-sunny-navy tracking-tight max-w-4xl mx-auto leading-[1.15]">
           {t.hero.titleMain}{' '}
@@ -43,7 +38,7 @@ export const Hero: React.FC<HeroProps> = ({
         </h1>
 
         {/* Subtitle */}
-        <p className="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
           {t.hero.subtitle}
         </p>
 
@@ -53,7 +48,7 @@ export const Hero: React.FC<HeroProps> = ({
           {/* Button 1: Book Passport Appointment */}
           <button
             onClick={onBookClick}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white font-bold text-sm sm:text-base shadow-sm hover:shadow-lg transition-all flex items-center justify-center gap-2.5 group active:scale-95 border border-sunny-navy"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white font-bold text-sm sm:text-base shadow-sm hover:shadow-lg transition-all flex items-center justify-center gap-2.5 group active:scale-95 border border-sunny-navy cursor-pointer"
           >
             <Calendar className="w-4 h-4 text-sunny-gold group-hover:scale-110 transition-transform" />
             <span>{t.hero.btnPrimary}</span>
@@ -62,7 +57,7 @@ export const Hero: React.FC<HeroProps> = ({
           {/* Button 2: Track Application */}
           <button
             onClick={onTrackClick}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-sunny-navy font-bold text-sm sm:text-base border border-slate-200/90 shadow-sm hover:shadow transition-all flex items-center justify-center gap-2.5 active:scale-95"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-sunny-navy font-bold text-sm sm:text-base border border-slate-200/90 shadow-sm hover:shadow transition-all flex items-center justify-center gap-2.5 active:scale-95 cursor-pointer"
           >
             <Search className="w-4 h-4 text-slate-500" />
             <span>{t.hero.btnSecondary}</span>
@@ -70,45 +65,82 @@ export const Hero: React.FC<HeroProps> = ({
 
         </div>
 
-        {/* Trust Badges / Stats Cards (Sunny Bento Polish) */}
-        <div className="mt-14 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-          
-          <div className="bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-4.5 text-center shadow-soft hover:border-slate-300 transition-all">
-            <div className="w-9 h-9 rounded-xl bg-amber-50 text-sunny-gold flex items-center justify-center mx-auto mb-2">
-              <MapPin className="w-4.5 h-4.5" />
-            </div>
-            <div className="font-extrabold text-xl text-sunny-navy">
-              {t.hero.stat1Number}
-            </div>
-            <div className="text-xs text-slate-500 font-medium mt-0.5">
-              {t.hero.stat1Label}
+        {/* Redesigned Premium Hero Status Ribbon / Bar */}
+        <div className="mt-12 sm:mt-14 max-w-4xl mx-auto">
+          <div className="bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-2xl sm:rounded-3xl shadow-[0_4px_25px_-5px_rgba(11,37,69,0.06)] p-3 sm:p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+              
+              {/* Stat 1: Consular Jurisdiction */}
+              <div className="p-3.5 sm:px-5 flex items-center gap-3.5 text-left group hover:bg-slate-50/70 rounded-xl transition-colors">
+                <div className="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200/60 text-sunny-gold flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                  <MapPin className="w-5 h-5 text-sunny-goldHover" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-lg text-sunny-navy leading-none">
+                      {t.hero.stat1Number}
+                    </span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-100/70 text-amber-900 uppercase tracking-wide">
+                      Germany
+                    </span>
+                  </div>
+                  <span className="text-xs text-slate-600 font-medium block mt-1 leading-snug">
+                    {t.hero.stat1Label}
+                  </span>
+                  <span className="text-[11px] text-slate-400 block mt-0.5">
+                    HE, BW, BY, NW, RP, SL
+                  </span>
+                </div>
+              </div>
+
+              {/* Stat 2: Counter Session */}
+              <div className="p-3.5 sm:px-5 flex items-center gap-3.5 text-left group hover:bg-slate-50/70 rounded-xl transition-colors">
+                <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-200/60 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                  <Clock className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-lg text-sunny-navy leading-none">
+                      {t.hero.stat2Number}
+                    </span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-blue-100/70 text-blue-900 uppercase tracking-wide">
+                      Fast Track
+                    </span>
+                  </div>
+                  <span className="text-xs text-slate-600 font-medium block mt-1 leading-snug">
+                    {t.hero.stat2Label}
+                  </span>
+                  <span className="text-[11px] text-slate-400 block mt-0.5">
+                    Mon – Fri 09:00 – 12:30 CET
+                  </span>
+                </div>
+              </div>
+
+              {/* Stat 3: Digital Transparency */}
+              <div className="p-3.5 sm:px-5 flex items-center gap-3.5 text-left group hover:bg-slate-50/70 rounded-xl transition-colors">
+                <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                  <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-lg text-sunny-navy leading-none">
+                      {t.hero.stat3Number}
+                    </span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-100/70 text-emerald-900 uppercase tracking-wide">
+                      Verified
+                    </span>
+                  </div>
+                  <span className="text-xs text-slate-600 font-medium block mt-1 leading-snug">
+                    {t.hero.stat3Label}
+                  </span>
+                  <span className="text-[11px] text-slate-400 block mt-0.5">
+                    Live QR Code & Stepper
+                  </span>
+                </div>
+              </div>
+
             </div>
           </div>
-
-          <div className="bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-4.5 text-center shadow-soft hover:border-slate-300 transition-all">
-            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2">
-              <Clock className="w-4.5 h-4.5" />
-            </div>
-            <div className="font-extrabold text-xl text-sunny-navy">
-              {t.hero.stat2Number}
-            </div>
-            <div className="text-xs text-slate-500 font-medium mt-0.5">
-              {t.hero.stat2Label}
-            </div>
-          </div>
-
-          <div className="bg-white/80 backdrop-blur-sm border border-slate-200/80 rounded-2xl p-4.5 text-center shadow-soft hover:border-slate-300 transition-all">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2">
-              <ShieldCheck className="w-4.5 h-4.5" />
-            </div>
-            <div className="font-extrabold text-xl text-sunny-navy">
-              {t.hero.stat3Number}
-            </div>
-            <div className="text-xs text-slate-500 font-medium mt-0.5">
-              {t.hero.stat3Label}
-            </div>
-          </div>
-
         </div>
 
       </div>
