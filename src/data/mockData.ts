@@ -18,7 +18,10 @@ export const mockApplications: ApplicationRecord[] = [
     appointmentTime: '10:00 - 10:30 CET',
     notes: 'Biometrics and fingerprint scan completed successfully. Passport is currently being engraved and encoded by the immigration printing unit.',
     feePaid: 65,
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FRA-2026-8812'
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('https://demo-crm.sunny.co.id/service/case'),
+    dhlTrackingNumber: 'JJD0003948192847DE',
+    dhlStatus: 'Awaiting pickup from consular office',
+    dhlEstimatedDelivery: '1 - 2 Business Days'
   },
   {
     id: 'FRA-2026-7731',
@@ -37,7 +40,10 @@ export const mockApplications: ApplicationRecord[] = [
     appointmentTime: '11:00 - 11:30 CET',
     notes: 'Police loss report (Verlustanzeige) verified. Please arrive 15 minutes before your scheduled termin with all original hardcopies.',
     feePaid: 135,
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FRA-2026-7731'
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('https://demo-crm.sunny.co.id/service/case'),
+    dhlTrackingNumber: 'JJD0003957281934DE',
+    dhlStatus: 'Scheduled for dispatch post-appointment',
+    dhlEstimatedDelivery: '1 - 2 Business Days'
   },
   {
     id: 'FRA-2026-9041',
@@ -54,9 +60,12 @@ export const mockApplications: ApplicationRecord[] = [
     submissionDate: '2026-10-28',
     appointmentDate: '2026-11-02',
     appointmentTime: '09:30 - 10:00 CET',
-    notes: 'Your new electronic passport has been issued and verified. You may collect it at the consular reception counter or wait for registered postal delivery (Einschreiben).',
+    notes: 'Your new electronic passport has been issued and dispatched via registered DHL Express delivery (Einschreiben).',
     feePaid: 65,
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FRA-2026-9041'
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('https://demo-crm.sunny.co.id/service/case'),
+    dhlTrackingNumber: 'JJD0003928174829DE',
+    dhlStatus: 'Out for delivery with DHL courier in München',
+    dhlEstimatedDelivery: 'Today by 17:00 CET'
   }
 ];
 

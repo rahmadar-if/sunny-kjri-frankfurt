@@ -4,7 +4,6 @@ import {
   ArrowRight, 
   ArrowLeft, 
   Check, 
-  Upload, 
   Calendar as CalendarIcon, 
   Clock, 
   FileCheck, 
@@ -13,7 +12,9 @@ import {
   Info,
   ShieldAlert,
   Trash2,
-  FileText
+  FileText,
+  User,
+  Globe
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Language, ServiceItem, ApplicationRecord } from '../types';
@@ -44,20 +45,27 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 }) => {
   const t = translations[lang];
 
-  // Wizard Step State
+  // Wizard Step State: 1 = Identity & Data Pemohon, 2 = Documents Checklist, 3 = Termin Appointment
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
 
-  // Step 1 Form Data
+  // COMBINED STEP 1 FORM DATA (Original + Form Terupdate dari Klien)
   const [fullName, setFullName] = useState(currentUser?.name || '');
-  const [nik, setNik] = useState('');
-  const [passportNumber, setPassportNumber] = useState('');
   const [email, setEmail] = useState(currentUser?.email || '');
+  const [nameInOldPassport, setNameInOldPassport] = useState(currentUser?.name || '');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [passportNumber, setPassportNumber] = useState('');
+  const [passportExpiryDate, setPassportExpiryDate] = useState('');
+  const [permitExpiryDate, setPermitExpiryDate] = useState('');
+  const [dualCitizenship, setDualCitizenship] = useState<'Ya' | 'Tidak'>('Tidak');
+  const [bundesland, setBundesland] = useState('Hessen');
+  const [phoneCountry, setPhoneCountry] = useState<'+62' | '+49'>('+49');
   const [phone, setPhone] = useState('');
   const [germanAddress, setGermanAddress] = useState('');
+  const [clientNote, setClientNote] = useState('');
   const [passportType, setPassportType] = useState<'electronic' | 'ordinary'>('electronic');
   const [otherServiceNote, setOtherServiceNote] = useState('');
 
-  // Step 2 Form Data - INITIALIZED EMPTY (Mandatory files required before proceeding)
+  // Step 2 Form Data - Document uploads & Peduli WNI
   const [peduliWniChecked, setPeduliWniChecked] = useState(false);
   const [peduliWniRef, setPeduliWniRef] = useState('');
   const [policeReportNo, setPoliceReportNo] = useState('');
@@ -104,13 +112,20 @@ export const WizardModal: React.FC<WizardModalProps> = ({
   // Sync / Pre-fill from Peduli WNI Record (STEP-BY-STEP PER TAB)
   const handleAutoFill = () => {
     if (currentStep === 1) {
-      // Step 1: Pre-fill Identity & German Contacts only
+      // Step 1: Pre-fill Combined Identity & Client Form Data
       setFullName(currentUser?.name || 'Budi Santoso');
-      setNik('3273012304910002');
-      setPassportNumber('B8291048');
       setEmail(currentUser?.email || 'budi.santoso@example.de');
-      setPhone('+49 176 12345678');
+      setNameInOldPassport(currentUser?.name || 'Budi Santoso');
+      setDateOfBirth('14/08/1994');
+      setPassportNumber('B8291048');
+      setPassportExpiryDate('15/05/2027');
+      setPermitExpiryDate('30/09/2028');
+      setDualCitizenship('Tidak');
+      setBundesland('Hessen');
+      setPhoneCountry('+49');
+      setPhone('176 12345678');
       setGermanAddress('Mainzer Landstraße 182, 60327 Frankfurt am Main');
+      setClientNote('Penggantian paspor reguler karena masa berlaku tersisa kurang dari 6 bulan untuk perpanjangan izin tinggal (Aufenthaltstitel).');
       if (service.id === 'other-consular-services') {
         setOtherServiceNote('Legalisasi Terjemahan Ijazah & Akta Kelahiran');
       }
@@ -140,8 +155,10 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
   // Step 1 Validation
   const handleNextStep1 = () => {
-    if (!fullName.trim() || !email.trim() || !phone.trim()) {
-      setValidationError(lang === 'en' ? 'Please fill in all required identity fields.' : 'Mohon lengkapi seluruh data identitas wajib.');
+    if (!fullName.trim() || !email.trim() || !phone.trim() || !passportNumber.trim()) {
+      setValidationError(lang === 'en' 
+        ? 'Please fill in all mandatory identity and passport fields (*).' 
+        : 'Mohon lengkapi seluruh kolom identitas dan data paspor wajib (*).');
       return;
     }
     if (service.id === 'other-consular-services' && !otherServiceNote.trim()) {
@@ -221,7 +238,6 @@ export const WizardModal: React.FC<WizardModalProps> = ({
       return;
     }
 
-    // Trigger celebration confetti
     try {
       confetti({
         particleCount: 80,
@@ -233,32 +249,40 @@ export const WizardModal: React.FC<WizardModalProps> = ({
     }
 
     const uniqueId = `FRA-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    const fee = (service.id === 'passport-appointment-only' || service.id === 'other-consular-services') ? 0 : passportType === 'electronic' ? 65 : 25;
+    const fee = 0;
 
     const computedServiceName = service.id === 'other-consular-services' && otherServiceNote.trim()
       ? `${lang === 'en' ? service.titleEn : service.titleId} — ${otherServiceNote}`
       : lang === 'en' ? service.titleEn : service.titleId;
+
+    // BARCODE ENCODES SUNNY CRM CASE URL AS REQUESTED
+    const crmCaseUrl = 'https://demo-crm.sunny.co.id/service/case';
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(crmCaseUrl)}`;
+
+    const fullPhone = `${phoneCountry} ${phone.replace(/^0+/, '')}`;
 
     const newRecord: ApplicationRecord = {
       id: uniqueId,
       serviceId: service.id,
       serviceName: computedServiceName,
       applicantName: fullName,
-      nik: nik || '3273012304910002',
-      passportNumber: passportNumber || 'B8291048',
+      nik: '3273012304910002',
+      passportNumber: passportNumber,
       email: email,
-      phone: phone,
-      germanAddress: germanAddress || 'Zeppelinallee 23, 60325 Frankfurt',
+      phone: fullPhone,
+      germanAddress: germanAddress ? `${germanAddress}, ${bundesland}` : `${bundesland}, Germany`,
       passportType: passportType,
       status: 'verified',
       submissionDate: new Date().toISOString().split('T')[0],
       appointmentDate: selectedDate,
       appointmentTime: selectedSlot,
-      notes: lang === 'en' 
+      notes: clientNote || (lang === 'en' 
         ? 'Documents preliminary verified. Please bring original physical copies to your consular appointment.' 
-        : 'Berkas telah diverifikasi lengkap. Harap bawa fisik dokumen asli saat hadir di loket konsuler.',
+        : 'Berkas telah diverifikasi lengkap. Harap bawa fisik dokumen asli saat hadir di loket konsuler.'),
       feePaid: fee,
-      qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${uniqueId}`
+      qrCodeUrl: qrCodeUrl,
+      dhlTrackingNumber: `JJD00039${Math.floor(10000000 + Math.random() * 90000000)}DE`,
+      dhlStatus: 'Awaiting passport printing completion for DHL dispatch'
     };
 
     onSubmitSuccess(newRecord);
@@ -320,52 +344,38 @@ export const WizardModal: React.FC<WizardModalProps> = ({
               <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 leading-snug">
                 {subtitle}
               </p>
-
-              {/* Uploaded state pill */}
-              {uploaded && (
-                <div className="mt-1.5 flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-mono font-bold text-emerald-800 truncate max-w-[180px] sm:max-w-[220px]">
-                    {uploaded.name}
-                  </span>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-200/70 text-emerald-900">
-                    {uploaded.size}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Right action button (Native file input) - full width on mobile */}
-          <div className="flex items-center gap-2 self-stretch sm:self-center flex-shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+          {/* Right Action: Upload or File Info */}
+          <div className="flex items-center justify-end gap-2 flex-shrink-0">
             {uploaded ? (
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <label className="flex-1 sm:flex-initial px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer transition-colors flex items-center justify-center gap-1">
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>{lang === 'en' ? 'Replace' : 'Ganti'}</span>
-                  <input
-                    type="file"
-                    accept=".pdf,.png,.jpg,.jpeg"
-                    className="hidden"
-                    onChange={(e) => handleFileSelect(key, e)}
-                  />
-                </label>
+              <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-emerald-200">
+                <div className="text-right">
+                  <span className="text-xs font-bold text-slate-700 block max-w-[120px] sm:max-w-[160px] truncate">
+                    {uploaded.name}
+                  </span>
+                  <span className="text-[10px] text-emerald-600 font-semibold block">
+                    {uploaded.size} &bull; Uploaded
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={() => handleRemoveFile(key)}
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                  className="p-1 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                   title="Remove file"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              <label className="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-sm hover:shadow transition-all active:scale-95">
-                <Upload className="w-3.5 h-3.5 text-sunny-gold" />
-                <span>{lang === 'en' ? 'Upload from Storage' : 'Unggah dari Perangkat'}</span>
-                <input
-                  type="file"
-                  accept=".pdf,.png,.jpg,.jpeg"
-                  className="hidden"
+              <label className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border border-slate-200 active:scale-95">
+                <FileText className="w-3.5 h-3.5 text-slate-500" />
+                <span>{lang === 'en' ? 'Browse File' : 'Pilih Berkas'}</span>
+                <input 
+                  type="file" 
+                  className="hidden" 
+                  accept=".pdf,.jpg,.jpeg,.png"
                   onChange={(e) => handleFileSelect(key, e)}
                 />
               </label>
@@ -377,57 +387,46 @@ export const WizardModal: React.FC<WizardModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn overflow-y-auto">
       <div 
-        className="bg-white rounded-2xl sm:rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col my-auto max-h-[94dvh] animate-modal-enter relative"
+        className="bg-white rounded-2xl sm:rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col my-auto max-h-[92dvh] animate-modal-enter relative"
         onClick={(e) => e.stopPropagation()}
       >
         
-        {/* Top Header */}
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80 flex-shrink-0">
-          <div className="flex-1 min-w-0 pr-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-sunny-gold block">
-              Consular Application Wizard
+        {/* Header Bar */}
+        <div className="px-4 sm:px-6 py-3.5 sm:py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70 flex-shrink-0">
+          <div>
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-sunny-gold block">
+              CONSULAR APPLICATION WIZARD
             </span>
-            <h3 className="font-extrabold text-sm sm:text-lg text-sunny-navy truncate">
+            <h2 className="text-base sm:text-xl font-extrabold text-sunny-navy tracking-tight leading-snug">
               {lang === 'en' ? service.titleEn : service.titleId}
-            </h3>
+            </h2>
           </div>
           
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-            {/* Sync from Peduli WNI (Official & Proper presales naming - Step by Step) */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
-              onClick={handleAutoFill}
               type="button"
-              className="px-2.5 py-1.5 rounded-lg bg-amber-100/90 hover:bg-amber-200 text-amber-950 text-[11px] sm:text-xs font-bold flex items-center gap-1 transition-all shadow-xs cursor-pointer"
-              title="Sync registration data for current step"
+              onClick={handleAutoFill}
+              className="px-2.5 py-1.5 text-[10px] sm:text-xs font-bold rounded-xl bg-amber-100/70 text-amber-900 hover:bg-amber-200/80 transition-colors flex items-center gap-1 shadow-xs cursor-pointer border border-amber-300/60 active:scale-95"
+              title="Pre-fill sample data for this step"
             >
-              <Sparkles className="w-3.5 h-3.5 text-sunny-goldHover" />
-              <span className="hidden sm:inline">
-                {currentStep === 1 
-                  ? (lang === 'en' ? '⚡ Sync Identity (Step 1)' : '⚡ Sinkronisasi Identitas') 
-                  : currentStep === 2 
-                  ? (lang === 'en' ? '⚡ Sync Documents (Step 2)' : '⚡ Sinkronisasi Berkas') 
-                  : (lang === 'en' ? '⚡ Auto-Select Slot' : '⚡ Pilih Slot Otomatis')}
-              </span>
-              <span className="sm:hidden">
-                {currentStep === 1 ? 'Sync Step 1' : currentStep === 2 ? 'Sync Step 2' : 'Select Slot'}
-              </span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+              <span>{currentStep === 1 ? 'Sync Identity' : currentStep === 2 ? 'Attach Sample Files' : 'Auto Pick Slot'} (Step {currentStep})</span>
             </button>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
-              aria-label="Close"
+              className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* 3-Step Simple Progress Tabs - Mobile Optimized */}
-        <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-white border-b border-slate-100 flex-shrink-0">
-          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center sm:text-left">
+        {/* Step Tabs Navigation */}
+        <div className="px-4 sm:px-6 pt-3 pb-2 bg-white border-b border-slate-100 flex-shrink-0">
+          <div className="grid grid-cols-3 gap-2">
             
             {/* Step 1 Tab */}
             <div className={`flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 pb-1.5 border-b-2 text-xs font-bold transition-colors ${
@@ -438,7 +437,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                 : 'border-slate-200 text-slate-400'
             }`}>
               <div className={`w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[10px] sm:text-[11px] flex-shrink-0 ${
-                currentStep > 1 ? 'bg-emerald-500 text-white' : currentStep === 1 ? 'bg-sunny-navy text-white' : 'bg-slate-200 text-slate-500'
+                currentStep > 1 ? 'bg-emerald-500 text-white' : 'bg-sunny-navy text-white'
               }`}>
                 {currentStep > 1 ? <Check className="w-3 h-3" /> : '1'}
               </div>
@@ -489,16 +488,19 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             </div>
           )}
 
-          {/* STEP 1: IDENTITY & CONTACT */}
+          {/* STEP 1: COMBINED FORM (IDENTITAS & DATA FORM KLIEN TERUPDATE) */}
           {currentStep === 1 && (
-            <div className="space-y-3.5 sm:space-y-4">
+            <div className="space-y-4">
+              
+              {/* Row 1: Nama Anda & Email Anda */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    {t.wizard.fullName} <span className="text-red-500">*</span>
+                    {lang === 'id' ? 'Nama Anda*' : 'Full Legal Name (Nama Anda)*'}
                   </label>
                   <input
                     type="text"
+                    required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="e.g. Budi Santoso"
@@ -508,49 +510,178 @@ export const WizardModal: React.FC<WizardModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    {t.wizard.nik}
-                  </label>
-                  <input
-                    type="text"
-                    value={nik}
-                    onChange={(e) => setNik(e.target.value)}
-                    placeholder="3273012304910002"
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    {t.wizard.email} <span className="text-red-500">*</span>
+                    {lang === 'id' ? 'Email Anda*' : 'Email Address (Email Anda)*'}
                   </label>
                   <input
                     type="email"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="budi.santoso@example.de"
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
                   />
                 </div>
+              </div>
 
+              {/* Row 2: Nama tertera di paspor lama & Tanggal lahir */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    {t.wizard.phone} <span className="text-red-500">*</span>
+                    {lang === 'id' ? 'Nama tertera di paspor lama*' : 'Name in Old Passport (Nama di paspor lama)*'}
                   </label>
                   <input
                     type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+49 176 12345678"
+                    required
+                    value={nameInOldPassport}
+                    onChange={(e) => setNameInOldPassport(e.target.value)}
+                    placeholder="Nama sesuai halaman identitas paspor"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === 'id' ? 'Tanggal lahir*' : 'Date of Birth (Tanggal lahir)*'}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={dateOfBirth}
+                    onChange={(e) => setDateOfBirth(e.target.value)}
+                    placeholder="dd/mm/yyyy (cth: 14/08/1994)"
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
                   />
                 </div>
               </div>
 
+              {/* Row 3: Nomor paspor lama & Tanggal habis masa berlaku paspor lama */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === 'id' ? 'Nomor paspor lama*' : 'Old Passport Number (Nomor paspor lama)*'}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={passportNumber}
+                    onChange={(e) => setPassportNumber(e.target.value)}
+                    placeholder="B8291048"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800 uppercase"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === 'id' ? 'Tanggal habis masa berlaku paspor lama*' : 'Old Passport Expiry Date*'}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={passportExpiryDate}
+                    onChange={(e) => setPassportExpiryDate(e.target.value)}
+                    placeholder="dd/mm/yyyy (cth: 15/05/2027)"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
+                  />
+                </div>
+              </div>
+
+              {/* Row 4: Tanggal habis izin tinggal di Jerman & Domisili Bundesland */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === 'id' ? 'Tanggal habis masa berlaku izin tinggal di Jerman*' : 'German Residence Permit Expiry Date*'}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={permitExpiryDate}
+                    onChange={(e) => setPermitExpiryDate(e.target.value)}
+                    placeholder="dd/mm/yyyy (cth: 30/09/2028)"
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === 'id' ? 'Domisili negara bagian/ Bundesland*' : 'German Federal State / Bundesland*'}
+                  </label>
+                  <select
+                    value={bundesland}
+                    onChange={(e) => setBundesland(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800 cursor-pointer"
+                  >
+                    <option value="Hessen">Hessen (Frankfurt, Darmstadt, Kassel, Wiesbaden)</option>
+                    <option value="Bayern">Bayern (München, Nürnberg, Augsburg)</option>
+                    <option value="Baden-Württemberg">Baden-Württemberg (Stuttgart, Karlsruhe, Heidelberg)</option>
+                    <option value="Nordrhein-Westfalen">Nordrhein-Westfalen (Köln, Düsseldorf, Dortmund, Bonn)</option>
+                    <option value="Rheinland-Pfalz">Rheinland-Pfalz (Mainz, Koblenz, Ludwigshafen)</option>
+                    <option value="Saarland">Saarland (Saarbrücken)</option>
+                    <option value="Lainnya">Lainnya / Wilayah Lain</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 5: Kewarganegaraan Lain & Nomor Telepon */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    {lang === 'id' ? 'Apakah anda memiliki kewarganegaraan lain?*' : 'Do you hold another citizenship?*'}
+                  </label>
+                  <div className="flex items-center gap-6 mt-1">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
+                      <input
+                        type="radio"
+                        name="dualCitizenship"
+                        value="Ya"
+                        checked={dualCitizenship === 'Ya'}
+                        onChange={() => setDualCitizenship('Ya')}
+                        className="w-4 h-4 text-sunny-navy border-slate-300 focus:ring-sunny-navy"
+                      />
+                      <span>Ya</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
+                      <input
+                        type="radio"
+                        name="dualCitizenship"
+                        value="Tidak"
+                        checked={dualCitizenship === 'Tidak'}
+                        onChange={() => setDualCitizenship('Tidak')}
+                        className="w-4 h-4 text-sunny-navy border-slate-300 focus:ring-sunny-navy"
+                      />
+                      <span>Tidak</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === 'id' ? 'Nomor telepon yang bisa dihubungi*' : 'Contact Phone / WhatsApp*'}
+                  </label>
+                  <div className="flex rounded-xl border border-slate-200 bg-slate-50 overflow-hidden focus-within:bg-white focus-within:border-sunny-navy focus-within:ring-2 focus-within:ring-sunny-navy/20">
+                    <select
+                      value={phoneCountry}
+                      onChange={(e) => setPhoneCountry(e.target.value as '+62' | '+49')}
+                      className="px-2.5 py-2.5 bg-slate-100 text-xs font-bold text-slate-700 border-r border-slate-200 focus:outline-none cursor-pointer"
+                    >
+                      <option value="+49">🇩🇪 +49</option>
+                      <option value="+62">🇮🇩 +62</option>
+                    </select>
+                    <input
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder={phoneCountry === '+49' ? '176 12345678' : '0812-345-678'}
+                      className="w-full px-3 py-2 text-xs sm:text-sm bg-transparent focus:outline-none font-medium text-slate-800"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 6: Alamat tinggal di Jerman */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {t.wizard.address}
+                  {lang === 'id' ? 'Alamat domisili lengkap di Jerman' : 'German Residential Address (Street, House No, PLZ, City)'}
                 </label>
                 <input
                   type="text"
@@ -561,28 +692,9 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                 />
               </div>
 
-              {/* If Other Consular Services: Free-text note */}
-              {service.id === 'other-consular-services' && (
-                <div className="pt-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    {lang === 'en' ? 'Consular Affair / Purpose Details' : 'Rincian Keperluan Pelayanan Konsuler'} <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={otherServiceNote}
-                    onChange={(e) => setOtherServiceNote(e.target.value)}
-                    placeholder={lang === 'en' ? 'Describe the service or documents you need (e.g. Document legalization, birth/marriage registration, attestations, consular inquiry)...' : 'Jelaskan keperluan atau dokumen yang ingin Anda urus (contoh: Legalisasi ijazah, pencatatan sipil nikah/lahir, surat keterangan domisili)...'}
-                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
-                  />
-                  <p className="text-[11px] text-slate-500 mt-1">
-                    {lang === 'en' ? 'Provide details so the consular desk can prepare your physical session.' : 'Berikan keterangan agar loket konsuler dapat mempersiapkan berkas Anda.'}
-                  </p>
-                </div>
-              )}
-
-              {/* Passport Document Type Selection (Only for Passport services) */}
+              {/* Row 7: Pilihan Jenis Paspor */}
               {service.id !== 'passport-appointment-only' && service.id !== 'other-consular-services' && (
-                <div className="pt-2">
+                <div className="pt-1">
                   <label className="block text-xs font-bold text-slate-700 mb-2">
                     {t.wizard.passportType}
                   </label>
@@ -633,10 +745,41 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                   </div>
                 </div>
               )}
+
+              {/* Row 8: Note / Alasan */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  {lang === 'id' ? 'Note/alasan' : 'Notes / Reason for application'}
+                </label>
+                <textarea
+                  rows={2}
+                  value={clientNote}
+                  onChange={(e) => setClientNote(e.target.value)}
+                  placeholder="Catatan tambahan atau alasan permohonan paspor/layanan konsuler..."
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
+                />
+              </div>
+
+              {/* If Other Consular Services */}
+              {service.id === 'other-consular-services' && (
+                <div className="pt-1">
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === 'en' ? 'Consular Affair / Purpose Details' : 'Rincian Keperluan Pelayanan Konsuler'} <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={otherServiceNote}
+                    onChange={(e) => setOtherServiceNote(e.target.value)}
+                    placeholder="Legalisasi ijazah, pencatatan sipil nikah/lahir, surat keterangan domisili..."
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
+                  />
+                </div>
+              )}
+
             </div>
           )}
 
-          {/* STEP 2: DOCUMENTS & DYNAMIC REQUIREMENTS (MANDATORY UPLOADS REQUIRED) */}
+          {/* STEP 2: DOCUMENTS & DYNAMIC REQUIREMENTS */}
           {currentStep === 2 && (
             <div className="space-y-4 sm:space-y-5">
               
@@ -647,92 +790,98 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     type="checkbox"
                     checked={peduliWniChecked}
                     onChange={(e) => setPeduliWniChecked(e.target.checked)}
-                    className="mt-1 rounded text-sunny-navy focus:ring-sunny-navy w-4 h-4 cursor-pointer"
+                    className="mt-0.5 w-4 h-4 text-sunny-navy rounded border-slate-300 focus:ring-sunny-navy"
                   />
                   <div>
-                    <span className="text-xs sm:text-sm font-bold text-amber-950 block">
+                    <span className="font-bold text-xs sm:text-sm text-slate-800 block">
                       {t.wizard.peduliWniCheck} <span className="text-red-500">*</span>
                     </span>
-                    <span className="text-[10px] sm:text-[11px] text-amber-800 block mt-0.5">
-                      Lapor diri is mandatory under Indonesian Consular Regulation.
+                    <span className="text-[11px] sm:text-xs text-slate-600 leading-relaxed block mt-0.5">
+                      {lang === 'en' ? 'Proof of active registration on the official Ministry of Foreign Affairs Peduli WNI portal.' : 'Surat tanda bukti atau konfirmasi lapor diri aktif di Portal Peduli WNI Kementerian Luar Negeri.'}
                     </span>
                   </div>
                 </label>
-                
+
                 {peduliWniChecked && (
-                  <div className="mt-2.5 sm:mt-3 pl-7">
+                  <div className="mt-3 pl-7">
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                      {t.wizard.peduliWniId}
+                    </label>
                     <input
                       type="text"
                       value={peduliWniRef}
                       onChange={(e) => setPeduliWniRef(e.target.value)}
-                      placeholder={t.wizard.peduliWniId}
-                      className="w-full px-3 py-2 text-xs rounded-lg bg-white border border-amber-300 text-slate-800 font-medium"
+                      placeholder="e.g. PWNI-FRA-2026-7819"
+                      className="w-full sm:max-w-xs px-3 py-1.5 text-xs rounded-lg bg-white border border-amber-300 focus:outline-none focus:ring-1 focus:ring-sunny-navy"
                     />
                   </div>
                 )}
               </div>
 
-              {/* Conditional Lost Passport Fields */}
+              {/* If Lost Passport: Require Police Loss Report Number */}
               {service.id === 'passport-lost' && (
-                <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50/70 border border-rose-200/80 space-y-2.5">
-                  <div className="flex items-center gap-2 text-rose-800 text-xs font-bold uppercase tracking-wide">
+                <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50/70 border border-rose-200">
+                  <div className="flex items-center gap-2 mb-2 text-rose-800 font-bold text-xs sm:text-sm">
                     <ShieldAlert className="w-4 h-4 text-rose-600" />
-                    <span>German Police Loss Report Required</span>
+                    <span>German Police Loss Report (Verlustanzeige)</span>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      {t.wizard.policeReportNo} <span className="text-rose-500">*</span>
+                      Nomor Surat Kehilangan Polisi Jerman <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={policeReportNo}
                       onChange={(e) => setPoliceReportNo(e.target.value)}
                       placeholder="e.g. POL-FFM-2026-004812"
-                      className="w-full px-3 py-2 text-xs rounded-lg bg-white border border-rose-300 text-slate-800 font-medium"
+                      className="w-full px-3 py-2 text-xs rounded-lg bg-white border border-rose-300 focus:outline-none focus:ring-1 focus:ring-rose-500"
                     />
                   </div>
                 </div>
               )}
 
-              {/* Conditional Damaged Passport Fields */}
+              {/* If Damaged Passport: Explanation field */}
               {service.id === 'passport-damaged' && (
-                <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-50/50 border border-amber-200/80 space-y-2">
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    {t.wizard.damageExplanation} <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={damageExplanation}
-                    onChange={(e) => setDamageExplanation(e.target.value)}
-                    placeholder="Describe how the damage occurred (e.g., torn signature page, water damage)..."
-                    className="w-full px-3 py-2 text-xs rounded-lg bg-white border border-slate-200 text-slate-800 font-medium"
-                  />
+                <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-50/70 border border-amber-200">
+                  <div className="flex items-center gap-2 mb-2 text-amber-900 font-bold text-xs sm:text-sm">
+                    <AlertCircle className="w-4 h-4 text-amber-700" />
+                    <span>Kronologi Kerusakan Paspor</span>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      Keterangan Singkat Penyebab Kerusakan <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={damageExplanation}
+                      onChange={(e) => setDamageExplanation(e.target.value)}
+                      placeholder="Jelaskan secara singkat bagaimana kerusakan terjadi (halaman sobek, basah, chip tidak terbaca)..."
+                      className="w-full px-3 py-2 text-xs rounded-lg bg-white border border-amber-300 focus:outline-none focus:ring-1 focus:ring-sunny-navy"
+                    />
+                  </div>
                 </div>
               )}
 
-              {/* Upload Checklist */}
+              {/* File Upload Rows */}
               <div>
-                <div className="flex items-center justify-between mb-2.5">
-                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700">
                     {t.wizard.uploadTitle}
-                  </span>
+                  </h4>
                   <span className="text-[10px] sm:text-[11px] text-slate-400">
-                    PDF, JPG, PNG (&lt; 5MB)
+                    PDF, JPG, PNG &bull; Max 5MB
                   </span>
                 </div>
 
                 <div className="space-y-2.5">
-                  
-                  {/* File: Relevant Document (if other consular services) */}
                   {service.id === 'other-consular-services' && renderDocUploadRow(
                     'relevant_doc',
-                    'Relevant Document / Paperwork to be Processed',
+                    'Relevant Document / Paperwork for Legalization',
                     'Berkas Dokumen Terkait yang Akan Diproses / Dilegalisasi',
                     true,
                     'Scan or draft of paperwork (e.g. certificate, translation, power of attorney)'
                   )}
 
-                  {/* File 1: Old Passport (if standard passport renewal or damaged) */}
                   {service.id !== 'passport-lost' && service.id !== 'other-consular-services' && service.id !== 'passport-appointment-only' && renderDocUploadRow(
                     'old_passport',
                     'Current / Old Passport (Identity Page)',
@@ -741,7 +890,6 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     'Scan or clear photo of page 2 & 3 showing full identity'
                   )}
 
-                  {/* File: Damaged Passport Photo (if damaged) */}
                   {service.id === 'passport-damaged' && renderDocUploadRow(
                     'damage_photo',
                     'Photograph of Damaged Passport Section',
@@ -750,7 +898,6 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     'Clear photo displaying torn, burnt, or unreadable pages'
                   )}
 
-                  {/* File: German Police Report (if lost) */}
                   {service.id === 'passport-lost' && renderDocUploadRow(
                     'police_loss_doc',
                     'German Police Loss Report (Verlustanzeige)',
@@ -759,7 +906,6 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     'Official certificate issued by local German police station'
                   )}
 
-                  {/* File 2: Residence Permit (all services) */}
                   {renderDocUploadRow(
                     'residence_permit',
                     'German Residence Title (Aufenthaltstitel / Visa)',
@@ -768,7 +914,6 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     'Front and back copy of valid electronic residence card (eAT)'
                   )}
 
-                  {/* File 3: Meldebescheinigung (all services) */}
                   {renderDocUploadRow(
                     'meldebescheinigung',
                     'Proof of German Residence (Meldebescheinigung)',
@@ -776,35 +921,46 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     true,
                     'Issued by Bürgeramt in Hessen, Bayern, BW, NRW, RP, or Saarland'
                   )}
-
-                  {/* Optional Old Passport Copy (if lost) */}
-                  {service.id === 'passport-lost' && renderDocUploadRow(
-                    'old_passport_copy',
-                    'Copy of Lost Passport (If available)',
-                    'Salinan Paspor yang Hilang (Jika ada)',
-                    false,
-                    'Optional scan or copy to expedite verification'
-                  )}
-
                 </div>
               </div>
 
             </div>
           )}
 
-          {/* STEP 3: CALENDAR & TIME-SLOT APPOINTMENT */}
+          {/* STEP 3: TERMIN & TIME-SLOT APPOINTMENT CONFIRMATION */}
           {currentStep === 3 && (
             <div className="space-y-4 sm:space-y-5">
               
-              {/* Info banner */}
-              <div className="flex items-start gap-2.5 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200/90 text-xs text-slate-600">
-                <Info className="w-4 h-4 text-sunny-navy mt-0.5 flex-shrink-0" />
-                <div>
-                  <span className="font-bold text-slate-800 block mb-0.5">
-                    {t.wizard.calendarTitle}
-                  </span>
-                  <span className="text-[11px] sm:text-xs leading-snug">{t.wizard.calendarDesc}</span>
+              {/* Client's Official Summary Banner with Icons */}
+              <div className="bg-[#F8FAFC] border border-[#CBD5E1] rounded-2xl p-4 space-y-2 text-xs sm:text-[13px] text-slate-800 shadow-xs">
+                <div className="font-extrabold text-sm text-sunny-navy mb-2 flex items-center gap-1.5 pb-2 border-b border-slate-200">
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span>Konfirmasi Jadwal Pemesanan: {lang === 'en' ? service.titleEn : service.titleId}</span>
                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                    <span><strong>Dengan:</strong> KJRI Frankfurt</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CalendarIcon className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                    <span><strong>Kapan:</strong> {selectedDate} ({selectedSlot})</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                    <span><strong>Zona waktu:</strong> Asia/Jakarta (CET)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                    <span><strong>Durasi:</strong> 15 menit</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Blue Alert Notice from Client Form */}
+              <div className="p-3.5 rounded-xl bg-[#EFF6FF] border border-[#BAE6FD] text-[#0369A1] text-xs font-semibold flex items-center gap-2">
+                <Info className="w-4 h-4 text-[#0369A1] flex-shrink-0" />
+                <span>Pemesanan ini memerlukan persetujuan dari tuan rumah.</span>
               </div>
 
               {/* Date Selection Grid */}
@@ -853,7 +1009,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {availableTimeSlots.map((slot, idx) => {
                     const isSelected = selectedSlot === slot;
-                    const isFull = idx === 4; // Mock one full slot
+                    const isFull = idx === 4;
                     return (
                       <button
                         key={slot}
@@ -885,12 +1041,17 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                 </div>
               </div>
 
+              {/* Disclaimer */}
+              <p className="text-[10px] sm:text-[11px] text-slate-400 text-center leading-relaxed pt-2">
+                Situs ini dilindungi oleh reCAPTCHA dan berlaku Kebijakan Privasi dan Persyaratan Layanan Google.
+              </p>
+
             </div>
           )}
 
         </div>
 
-        {/* Footer Navigation Buttons - Mobile Optimized */}
+        {/* Footer Navigation Buttons */}
         <div className="p-3 sm:px-6 sm:py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2 flex-shrink-0">
           {currentStep > 1 ? (
             <button
@@ -931,10 +1092,10 @@ export const WizardModal: React.FC<WizardModalProps> = ({
             <button
               type="button"
               onClick={handleFinalSubmit}
-              className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs font-bold flex items-center gap-2 transition-all shadow-sm active:scale-95 cursor-pointer ring-2 ring-sunny-gold/40 ml-auto"
+              className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold flex items-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer ml-auto"
             >
-              <Check className="w-4 h-4 text-sunny-gold" />
-              <span>{t.wizard.submitBtn}</span>
+              <Check className="w-4 h-4 text-white" />
+              <span>Minta Pemesanan (Confirm Appointment)</span>
             </button>
           )}
         </div>

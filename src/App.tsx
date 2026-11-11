@@ -113,7 +113,9 @@ export function App() {
         appointmentTime: '10:00 - 10:30 CET',
         notes: 'Document verification passed. Ready for biometric photograph session at the consular chancery.',
         feePaid: 65,
-        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${trimmed}`
+        qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent('https://demo-crm.sunny.co.id/service/case')}`,
+        dhlTrackingNumber: `JJD00039${Math.floor(10000000 + Math.random() * 90000000)}DE`,
+        dhlStatus: 'Out for delivery via DHL Express Germany'
       };
       setActiveTrackingApp(fallbackApp);
     }
@@ -203,6 +205,17 @@ export function App() {
         application={eTicketApp}
         isOpen={Boolean(eTicketApp)}
         onClose={() => setETicketApp(null)}
+      />
+
+      {/* Quick Authentication Modal */}
+      <AuthModal
+        lang={lang}
+        isOpen={isAuthOpen}
+        onClose={() => {
+          setIsAuthOpen(false);
+          setPendingService(null);
+        }}
+        onLoginSuccess={handleLoginSuccess}
       />
 
       {/* Quick Authentication Modal */}

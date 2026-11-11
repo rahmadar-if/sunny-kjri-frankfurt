@@ -48,6 +48,9 @@ export interface ApplicationRecord {
   notes?: string;
   feePaid: number;
   qrCodeUrl?: string;
+  dhlTrackingNumber?: string;
+  dhlStatus?: string;
+  dhlEstimatedDelivery?: string;
 }
 
 export interface FaqItem {

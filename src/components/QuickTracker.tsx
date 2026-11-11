@@ -84,39 +84,37 @@ export const QuickTracker: React.FC<QuickTrackerProps> = ({
             </div>
           )}
 
-          {/* Quick Active Registry Reference Pills - ONLY SHOWN WHEN USER IS LOGGED IN */}
-          {currentUser && (
-            <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-center gap-2 flex-wrap text-xs text-slate-600 animate-fadeIn">
-              <span className="flex items-center gap-1 font-semibold text-slate-500 text-[11px] sm:text-xs">
-                <FileCheck2 className="w-3.5 h-3.5 text-sunny-navy" />
-                {t.tracker.quickRefLabel}
-              </span>
-              <button
-                type="button"
-                onClick={() => handleSampleClick('FRA-2026-8812')}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors flex items-center gap-1 border border-slate-200/80"
-              >
-                <span>FRA-2026-8812</span>
-                <span className="text-[10px] text-amber-700 font-sans font-bold">({lang === 'en' ? 'In Production' : 'Proses Cetak'})</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSampleClick('FRA-2026-7731')}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors flex items-center gap-1 border border-slate-200/80"
-              >
-                <span>FRA-2026-7731</span>
-                <span className="text-[10px] text-blue-700 font-sans font-bold">({lang === 'en' ? 'Verified' : 'Terverifikasi'})</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSampleClick('FRA-2026-9041')}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors flex items-center gap-1 border border-slate-200/80"
-              >
-                <span>FRA-2026-9041</span>
-                <span className="text-[10px] text-emerald-700 font-sans font-bold">({lang === 'en' ? 'Ready' : 'Siap Diambil'})</span>
-              </button>
-            </div>
-          )}
+          {/* Quick Active Registry Reference Pills */}
+          <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-center gap-2 flex-wrap text-xs text-slate-600 animate-fadeIn">
+            <span className="flex items-center gap-1 font-semibold text-slate-500 text-[11px] sm:text-xs">
+              <FileCheck2 className="w-3.5 h-3.5 text-sunny-navy" />
+              <span>Demo Quick Track:</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => handleSampleClick('FRA-2026-8812')}
+              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors flex items-center gap-1 border border-slate-200/80 cursor-pointer"
+            >
+              <span>FRA-2026-8812</span>
+              <span className="text-[10px] text-amber-700 font-sans font-bold">({lang === 'en' ? 'In Production' : 'Proses Cetak'})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSampleClick('FRA-2026-7731')}
+              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-[11px] font-semibold transition-colors flex items-center gap-1 border border-slate-200/80 cursor-pointer"
+            >
+              <span>FRA-2026-7731</span>
+              <span className="text-[10px] text-blue-700 font-sans font-bold">({lang === 'en' ? 'Verified' : 'Terverifikasi'})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSampleClick('FRA-2026-9041')}
+              className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-mono text-[11px] font-semibold transition-colors flex items-center gap-1 border border-emerald-200/80 cursor-pointer"
+            >
+              <span>FRA-2026-9041</span>
+              <span className="text-[10px] text-emerald-700 font-sans font-bold">(Dispatched DHL 🚚)</span>
+            </button>
+          </div>
 
         </div>
 

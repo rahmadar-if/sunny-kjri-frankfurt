@@ -64,13 +64,27 @@ export const ETicketModal: React.FC<ETicketModalProps> = ({
               </p>
             </div>
 
-            {/* QR Code Container */}
-            <div className="p-2 bg-white rounded-xl border border-slate-200 shadow-xs flex-shrink-0">
-              <img
-                src={application.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${application.id}`}
-                alt="Termin QR Code"
-                className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
-              />
+            {/* QR Code Container pointing to Sunny CRM Case */}
+            <div className="flex flex-col items-center">
+              <a
+                href="https://demo-crm.sunny.co.id/service/case"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group p-2 bg-white rounded-xl border border-slate-200 shadow-xs hover:border-sunny-navy hover:shadow-md transition-all flex-shrink-0 text-center block cursor-pointer"
+                title="Scan dengan kamera atau klik untuk membuka Service Case di Sunny CRM"
+              >
+                <img
+                  src={application.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('https://demo-crm.sunny.co.id/service/case')}`}
+                  alt="Termin QR Code"
+                  className="w-20 h-20 sm:w-24 sm:h-24 object-contain mx-auto group-hover:scale-105 transition-transform"
+                />
+                {/* <span className="text-[9px] font-bold text-blue-600 block mt-1 hover:underline">
+                  demo-crm.sunny.co.id
+                </span> */}
+              </a>
+              <span className="text-[8px] text-slate-400 font-medium mt-0.5">
+                Scan / Click to open Case
+              </span>
             </div>
           </div>
 
@@ -130,10 +144,10 @@ export const ETicketModal: React.FC<ETicketModalProps> = ({
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 flex-shrink-0" />
                 <span>Original Proof of German Residence (Meldebescheinigung)</span>
               </li>
-              <li className="flex items-center gap-2">
+              {/* <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-400 flex-shrink-0" />
                 <span>Printout of Peduli WNI email confirmation</span>
-              </li>
+              </li> */}
               {application.serviceId === 'passport-lost' && (
                 <li className="flex items-center gap-2 text-rose-700 font-semibold">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-600 flex-shrink-0" />

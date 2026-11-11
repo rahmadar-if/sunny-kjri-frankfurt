@@ -49,7 +49,8 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               </li>
               <li>
                 <a
-                  href="https://peduliwni.kemlu.go.id"
+                  // href="https://peduliwni.kemlu.go.id"
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white flex items-center gap-1.5 transition-colors"
