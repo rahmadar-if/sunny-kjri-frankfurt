@@ -28,16 +28,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onLoginSuccess({
-      name: name || (isRegister ? 'Pemohon Terdaftar' : 'Budi Santoso'),
-      email: email || 'budi.santoso@example.de',
+      name: name || (isRegister ? 'Pemohon Terdaftar' : 'Indar Wiguna'),
+      email: email || 'indar@i-systemasia.com',
     });
     onClose();
   };
 
   const handleVerifiedWniLogin = () => {
     onLoginSuccess({
-      name: 'Budi Santoso',
-      email: 'budi.santoso@example.de',
+      name: 'Indar Wiguna',
+      email: 'indar@i-systemasia.com',
     });
     onClose();
   };
@@ -101,7 +101,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Budi Santoso"
+                    placeholder="Indar Wiguna"
                     className="w-full pl-10 pr-3 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 font-medium"
                   />
                 </div>
@@ -119,7 +119,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="budi.santoso@example.de"
+                  placeholder="indar@i-systemasia.com"
                   className="w-full pl-10 pr-3 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 font-medium"
                 />
               </div>

@@ -154,7 +154,7 @@ export const translations = {
       btnSubmitRegister: "Create Account",
       toggleToRegister: "Don't have an account yet? Register here",
       toggleToLogin: "Already have an account? Sign In",
-      demoLoginBtn: "⚡ Single Sign-On Peduli WNI (Budi Santoso)"
+      demoLoginBtn: "⚡ Single Sign-On Peduli WNI (Indar Wiguna)"
     }
   },
   id: {
@@ -312,7 +312,7 @@ export const translations = {
       btnSubmitRegister: "Daftar Akun",
       toggleToRegister: "Belum memiliki akun? Daftar di sini",
       toggleToLogin: "Sudah memiliki akun? Masuk sekarang",
-      demoLoginBtn: "⚡ Masuk Cepat Akun WNI Terverifikasi (Budi Santoso)"
+      demoLoginBtn: "⚡ Masuk Cepat Akun WNI Terverifikasi (Indar Wiguna)"
     }
   }
 };

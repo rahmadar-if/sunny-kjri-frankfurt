@@ -113,9 +113,9 @@ export const WizardModal: React.FC<WizardModalProps> = ({
   const handleAutoFill = () => {
     if (currentStep === 1) {
       // Step 1: Pre-fill Combined Identity & Client Form Data
-      setFullName(currentUser?.name || 'Budi Santoso');
-      setEmail(currentUser?.email || 'budi.santoso@example.de');
-      setNameInOldPassport(currentUser?.name || 'Budi Santoso');
+      setFullName(currentUser?.name || 'Indar Wiguna');
+      setEmail(currentUser?.email || 'indar@i-systemasia.com');
+      setNameInOldPassport(currentUser?.name || 'Indar Wiguna');
       setDateOfBirth('14/08/1994');
       setPassportNumber('B8291048');
       setPassportExpiryDate('15/05/2027');
@@ -137,8 +137,8 @@ export const WizardModal: React.FC<WizardModalProps> = ({
       setPoliceReportNo('POL-FFM-2026-004812');
       setDamageExplanation('Halaman paspor sobek sebagian karena tersangkut koper.');
       setUploadedFiles({
-        'old_passport': { name: 'paspor_lama_budi.pdf', size: '1.2 MB' },
-        'residence_permit': { name: 'aufenthaltstitel_budi.jpg', size: '850 KB' },
+        'old_passport': { name: 'paspor_lama_indar.pdf', size: '1.2 MB' },
+        'residence_permit': { name: 'aufenthaltstitel_indar.jpg', size: '850 KB' },
         'meldebescheinigung': { name: 'meldebescheinigung_ffm.pdf', size: '420 KB' },
         'police_loss_doc': { name: 'polizei_verlustanzeige.pdf', size: '610 KB' },
         'damage_photo': { name: 'foto_kerusakan_paspor.jpg', size: '940 KB' },
@@ -503,7 +503,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g. Budi Santoso"
+                    placeholder="e.g. Indar Wiguna"
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
                   />
                 </div>
@@ -517,7 +517,7 @@ export const WizardModal: React.FC<WizardModalProps> = ({
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="budi.santoso@example.de"
+                    placeholder="indar@i-systemasia.com"
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sunny-navy/20 focus:border-sunny-navy font-medium text-slate-800"
                   />
                 </div>
