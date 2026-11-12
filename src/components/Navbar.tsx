@@ -45,7 +45,17 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
           
         {/* Brand Logo & Diplomatic Seal */}
-        <a href="#" className="flex items-center gap-2.5 sm:gap-3 group" onClick={closeMobileMenu}>
+        <a 
+          href="#" 
+          className="flex items-center gap-2.5 sm:gap-3 group" 
+          onClick={(e) => {
+            closeMobileMenu();
+            if (currentView === 'dashboard') {
+              e.preventDefault();
+              onNavigateView?.('landing');
+            }
+          }}
+        >
           <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-sunny-navy flex items-center justify-center p-1.5 sm:p-2 shadow-xs text-sunny-gold group-hover:scale-105 transition-transform flex-shrink-0">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/9/90/National_emblem_of_Indonesia_Garuda_Pancasila.svg"
@@ -64,63 +74,51 @@ export const Navbar: React.FC<NavbarProps> = ({
         </a>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-600">
-          {currentUser ? (
-            <>
-              <button
-                onClick={() => onNavigateView?.('landing')}
-                className={`transition-colors cursor-pointer py-1 ${
-                  currentView === 'landing'
-                    ? 'text-sunny-navy font-bold border-b-2 border-sunny-navy'
-                    : 'hover:text-sunny-navy'
-                }`}
-              >
-                {t.nav.publicPortal}
-              </button>
-              <button
-                onClick={() => onNavigateView?.('dashboard')}
-                className={`transition-colors cursor-pointer py-1 flex items-center gap-1.5 ${
-                  currentView === 'dashboard'
-                    ? 'text-sunny-navy font-bold border-b-2 border-sunny-navy'
-                    : 'hover:text-sunny-navy'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span>{t.nav.myDashboard}</span>
-              </button>
-              {currentView === 'landing' && (
-                <>
-                  <a href="#services" className="hover:text-sunny-navy transition-colors text-slate-500">
-                    {t.nav.services}
-                  </a>
-                  <a href="#tracker" className="hover:text-sunny-navy transition-colors text-slate-500">
-                    {t.nav.tracker}
-                  </a>
-                  <a href="#faq" className="hover:text-sunny-navy transition-colors text-slate-500">
-                    {t.nav.faq}
-                  </a>
-                  <a href="#contact" className="hover:text-sunny-navy transition-colors text-slate-500">
-                    {t.nav.contact}
-                  </a>
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              <a href="#services" className="hover:text-sunny-navy transition-colors">
-                {t.nav.services}
-              </a>
-              <a href="#tracker" className="hover:text-sunny-navy transition-colors">
-                {t.nav.tracker}
-              </a>
-              <a href="#faq" className="hover:text-sunny-navy transition-colors">
-                {t.nav.faq}
-              </a>
-              <a href="#contact" className="hover:text-sunny-navy transition-colors">
-                {t.nav.contact}
-              </a>
-            </>
-          )}
+        <nav className="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-600">
+          <a 
+            href="#services" 
+            onClick={() => {
+              if (currentView === 'dashboard') {
+                onNavigateView?.('landing');
+              }
+            }}
+            className="hover:text-sunny-navy transition-colors"
+          >
+            {t.nav.services}
+          </a>
+          <a 
+            href="#tracker" 
+            onClick={() => {
+              if (currentView === 'dashboard') {
+                onNavigateView?.('landing');
+              }
+            }}
+            className="hover:text-sunny-navy transition-colors"
+          >
+            {t.nav.tracker}
+          </a>
+          <a 
+            href="#faq" 
+            onClick={() => {
+              if (currentView === 'dashboard') {
+                onNavigateView?.('landing');
+              }
+            }}
+            className="hover:text-sunny-navy transition-colors"
+          >
+            {t.nav.faq}
+          </a>
+          <a 
+            href="#contact" 
+            onClick={() => {
+              if (currentView === 'dashboard') {
+                onNavigateView?.('landing');
+              }
+            }}
+            className="hover:text-sunny-navy transition-colors"
+          >
+            {t.nav.contact}
+          </a>
         </nav>
 
         {/* Desktop Actions & Utilities */}
@@ -184,14 +182,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Primary Action Button */}
-          <button
-            onClick={onBookClick}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow transition-all group active:scale-95 cursor-pointer"
-          >
-            <span>{t.nav.appointment}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-sunny-gold group-hover:translate-x-0.5 transition-transform" />
-          </button>
+          {/* Primary Action Button (Hidden on My Dashboard as requested) */}
+          {currentView !== 'dashboard' && (
+            <button
+              onClick={onBookClick}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow transition-all group active:scale-95 cursor-pointer"
+            >
+              <span>{t.nav.appointment}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-sunny-gold group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          )}
 
         </div>
 
@@ -279,33 +279,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Nav Links */}
           <div className="space-y-1">
-            {currentUser && (
-              <>
-                <button
-                  onClick={() => {
-                    closeMobileMenu();
-                    onNavigateView?.('dashboard');
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-sunny-navy bg-slate-50 hover:bg-slate-100 transition-colors text-left cursor-pointer"
-                >
-                  <LayoutDashboard className="w-4 h-4 text-emerald-600" />
-                  <span>{t.nav.myDashboard}</span>
-                </button>
-                <button
-                  onClick={() => {
-                    closeMobileMenu();
-                    onNavigateView?.('landing');
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer"
-                >
-                  <Compass className="w-4 h-4 text-sunny-navy" />
-                  <span>{t.nav.publicPortal}</span>
-                </button>
-              </>
-            )}
             <a
               href="#services"
-              onClick={closeMobileMenu}
+              onClick={() => {
+                closeMobileMenu();
+                if (currentView === 'dashboard') {
+                  onNavigateView?.('landing');
+                }
+              }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:text-sunny-navy hover:bg-slate-50 transition-colors"
             >
               <Calendar className="w-4 h-4 text-sunny-goldHover" />
@@ -313,7 +294,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
             <a
               href="#tracker"
-              onClick={closeMobileMenu}
+              onClick={() => {
+                closeMobileMenu();
+                if (currentView === 'dashboard') {
+                  onNavigateView?.('landing');
+                }
+              }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:text-sunny-navy hover:bg-slate-50 transition-colors"
             >
               <Compass className="w-4 h-4 text-blue-600" />
@@ -321,7 +307,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
             <a
               href="#faq"
-              onClick={closeMobileMenu}
+              onClick={() => {
+                closeMobileMenu();
+                if (currentView === 'dashboard') {
+                  onNavigateView?.('landing');
+                }
+              }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:text-sunny-navy hover:bg-slate-50 transition-colors"
             >
               <HelpCircle className="w-4 h-4 text-amber-600" />
@@ -329,7 +320,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
             <a
               href="#contact"
-              onClick={closeMobileMenu}
+              onClick={() => {
+                closeMobileMenu();
+                if (currentView === 'dashboard') {
+                  onNavigateView?.('landing');
+                }
+              }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:text-sunny-navy hover:bg-slate-50 transition-colors"
             >
               <PhoneCall className="w-4 h-4 text-emerald-600" />
@@ -337,16 +333,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             </a>
           </div>
 
-          {/* Direct CTA inside Mobile Menu */}
-          <div className="pt-2 border-t border-slate-100">
-            <button
-              onClick={handleMobileBookClick}
-              className="w-full py-3 px-4 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-95 transition-all"
-            >
-              <span>{t.hero.btnPrimary}</span>
-              <ArrowRight className="w-4 h-4 text-sunny-gold" />
-            </button>
-          </div>
+          {/* Direct CTA inside Mobile Menu (Hidden on Dashboard) */}
+          {currentView !== 'dashboard' && (
+            <div className="pt-2 border-t border-slate-100">
+              <button
+                onClick={handleMobileBookClick}
+                className="w-full py-3 px-4 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-95 transition-all"
+              >
+                <span>{t.hero.btnPrimary}</span>
+                <ArrowRight className="w-4 h-4 text-sunny-gold" />
+              </button>
+            </div>
+          )}
 
         </div>
       )}
