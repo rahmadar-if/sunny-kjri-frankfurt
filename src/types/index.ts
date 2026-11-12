@@ -28,7 +28,8 @@ export type ApplicationStatus =
   | 'verified'
   | 'appointment_ready'
   | 'in_production'
-  | 'ready_for_pickup';
+  | 'ready_for_pickup'
+  | 'cancelled';
 
 export interface ApplicationRecord {
   id: string;
@@ -51,6 +52,22 @@ export interface ApplicationRecord {
   dhlTrackingNumber?: string;
   dhlStatus?: string;
   dhlEstimatedDelivery?: string;
+  cancellationReason?: string;
+  rescheduledAt?: string;
+}
+
+export interface UserProfile {
+  name: string;
+  email: string;
+  nik: string;
+  currentPassportNo: string;
+  passportExpiry: string;
+  phone: string;
+  germanAddress: string;
+  city: string;
+  postalCode: string;
+  peduliWniStatus: 'verified' | 'pending' | 'unregistered';
+  peduliWniId: string;
 }
 
 export interface FaqItem {

@@ -1,6 +1,42 @@
-import { ApplicationRecord, FaqItem } from '../types';
+import { ApplicationRecord, FaqItem, UserProfile } from '../types';
+
+export const mockUserProfile: UserProfile = {
+  name: 'Indar Wiguna',
+  email: 'indar@i-systemasia.com',
+  nik: '3273012304910002',
+  currentPassportNo: 'B8291048',
+  passportExpiry: '14 Dec 2026',
+  phone: '+49 176 12345678',
+  germanAddress: 'Mainzer Landstraße 182',
+  city: 'Frankfurt am Main',
+  postalCode: '60327',
+  peduliWniStatus: 'verified',
+  peduliWniId: 'PWNI-DE-FRA-2024-9981'
+};
 
 export const mockApplications: ApplicationRecord[] = [
+  {
+    id: 'FRA-2026-9502',
+    serviceId: 'passport-expired',
+    serviceName: 'Passport Renewal (Expired / Expiring)',
+    applicantName: 'Indar Wiguna',
+    nik: '3273012304910002',
+    passportNumber: 'B8291048',
+    email: 'indar@i-systemasia.com',
+    phone: '+49 176 12345678',
+    germanAddress: 'Mainzer Landstraße 182, 60327 Frankfurt am Main',
+    passportType: 'electronic',
+    status: 'appointment_ready',
+    submissionDate: '2026-11-10',
+    appointmentDate: '2026-11-18',
+    appointmentTime: '10:30 - 11:00 CET',
+    notes: 'Jadwal termin foto biometrik terkonfirmasi di Loket Konsuler KJRI Frankfurt. Harap hadir 15 menit sebelum slot dengan berkas asli.',
+    feePaid: 65,
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('https://demo-crm.sunny.co.id/service/case/FRA-2026-9502'),
+    dhlTrackingNumber: 'JJD0003998129381DE',
+    dhlStatus: 'Awaiting biometrics appointment',
+    dhlEstimatedDelivery: '3 - 4 Days after counter session'
+  },
   {
     id: 'FRA-2026-8812',
     serviceId: 'passport-expired',
@@ -18,10 +54,29 @@ export const mockApplications: ApplicationRecord[] = [
     appointmentTime: '10:00 - 10:30 CET',
     notes: 'Biometrics and fingerprint scan completed successfully. Passport is currently being engraved and encoded by the immigration printing unit.',
     feePaid: 65,
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('https://demo-crm.sunny.co.id/service/case'),
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('https://demo-crm.sunny.co.id/service/case/FRA-2026-8812'),
     dhlTrackingNumber: 'JJD0003948192847DE',
     dhlStatus: 'Awaiting pickup from consular office',
     dhlEstimatedDelivery: '1 - 2 Business Days'
+  },
+  {
+    id: 'FRA-2025-4120',
+    serviceId: 'passport-appointment-only',
+    serviceName: 'Consular Appointment (Termin Only)',
+    applicantName: 'Indar Wiguna',
+    nik: '3273012304910002',
+    passportNumber: 'B8291048',
+    email: 'indar@i-systemasia.com',
+    phone: '+49 176 12345678',
+    germanAddress: 'Mainzer Landstraße 182, 60327 Frankfurt am Main',
+    passportType: 'ordinary',
+    status: 'ready_for_pickup',
+    submissionDate: '2025-06-12',
+    appointmentDate: '2025-06-19',
+    appointmentTime: '11:00 - 11:30 CET',
+    notes: 'Pelayanan legalisasi dokumen selesai dan telah diserahkan di loket konsuler.',
+    feePaid: 0,
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent('https://demo-crm.sunny.co.id/service/case/FRA-2025-4120')
   },
   {
     id: 'FRA-2026-7731',

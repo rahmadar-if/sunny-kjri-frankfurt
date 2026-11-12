@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Globe, User, LogOut, ArrowRight, Menu, X, Calendar, Compass, HelpCircle, PhoneCall } from 'lucide-react';
+import { Globe, User, LogOut, ArrowRight, Menu, X, Calendar, Compass, HelpCircle, PhoneCall, LayoutDashboard } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../data/translations';
 
@@ -10,6 +10,8 @@ interface NavbarProps {
   onOpenAuth: () => void;
   onSignOut: () => void;
   onBookClick: () => void;
+  currentView?: 'landing' | 'dashboard';
+  onNavigateView?: (view: 'landing' | 'dashboard') => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -19,6 +21,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuth,
   onSignOut,
   onBookClick,
+  currentView = 'landing',
+  onNavigateView,
 }) => {
   const t = translations[lang];
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -60,19 +64,63 @@ export const Navbar: React.FC<NavbarProps> = ({
         </a>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-600">
-          <a href="#services" className="hover:text-sunny-navy transition-colors">
-            {t.nav.services}
-          </a>
-          <a href="#tracker" className="hover:text-sunny-navy transition-colors">
-            {t.nav.tracker}
-          </a>
-          <a href="#faq" className="hover:text-sunny-navy transition-colors">
-            {t.nav.faq}
-          </a>
-          <a href="#contact" className="hover:text-sunny-navy transition-colors">
-            {t.nav.contact}
-          </a>
+        <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-600">
+          {currentUser ? (
+            <>
+              <button
+                onClick={() => onNavigateView?.('landing')}
+                className={`transition-colors cursor-pointer py-1 ${
+                  currentView === 'landing'
+                    ? 'text-sunny-navy font-bold border-b-2 border-sunny-navy'
+                    : 'hover:text-sunny-navy'
+                }`}
+              >
+                {t.nav.publicPortal}
+              </button>
+              <button
+                onClick={() => onNavigateView?.('dashboard')}
+                className={`transition-colors cursor-pointer py-1 flex items-center gap-1.5 ${
+                  currentView === 'dashboard'
+                    ? 'text-sunny-navy font-bold border-b-2 border-sunny-navy'
+                    : 'hover:text-sunny-navy'
+                }`}
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span>{t.nav.myDashboard}</span>
+              </button>
+              {currentView === 'landing' && (
+                <>
+                  <a href="#services" className="hover:text-sunny-navy transition-colors text-slate-500">
+                    {t.nav.services}
+                  </a>
+                  <a href="#tracker" className="hover:text-sunny-navy transition-colors text-slate-500">
+                    {t.nav.tracker}
+                  </a>
+                  <a href="#faq" className="hover:text-sunny-navy transition-colors text-slate-500">
+                    {t.nav.faq}
+                  </a>
+                  <a href="#contact" className="hover:text-sunny-navy transition-colors text-slate-500">
+                    {t.nav.contact}
+                  </a>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <a href="#services" className="hover:text-sunny-navy transition-colors">
+                {t.nav.services}
+              </a>
+              <a href="#tracker" className="hover:text-sunny-navy transition-colors">
+                {t.nav.tracker}
+              </a>
+              <a href="#faq" className="hover:text-sunny-navy transition-colors">
+                {t.nav.faq}
+              </a>
+              <a href="#contact" className="hover:text-sunny-navy transition-colors">
+                {t.nav.contact}
+              </a>
+            </>
+          )}
         </nav>
 
         {/* Desktop Actions & Utilities */}
@@ -106,14 +154,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Auth State */}
           {currentUser ? (
             <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-              <div className="flex flex-col text-right">
-                <span className="text-xs font-bold text-sunny-navy truncate max-w-[120px]">
+              <button
+                onClick={() => onNavigateView?.('dashboard')}
+                className="flex flex-col text-right hover:opacity-80 transition-opacity cursor-pointer group"
+                title={t.nav.myDashboard}
+              >
+                <span className="text-xs font-bold text-sunny-navy group-hover:underline truncate max-w-[120px]">
                   {currentUser.name}
                 </span>
                 <span className="text-[10px] text-slate-400">
                   {currentUser.email}
                 </span>
-              </div>
+              </button>
               <button
                 onClick={onSignOut}
                 title={t.nav.signOut}
@@ -149,9 +201,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile Login / User Profile Icon */}
           {currentUser ? (
             <div className="flex items-center gap-1 bg-slate-100 py-1.5 px-2.5 rounded-xl border border-slate-200/80">
-              <span className="text-xs font-bold text-sunny-navy truncate max-w-[90px]">
+              <button
+                onClick={() => onNavigateView?.('dashboard')}
+                className="text-xs font-bold text-sunny-navy truncate max-w-[90px] cursor-pointer"
+              >
                 {currentUser.name.split(' ')[0]}
-              </span>
+              </button>
               <button
                 onClick={onSignOut}
                 title={t.nav.signOut}
@@ -224,6 +279,30 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Nav Links */}
           <div className="space-y-1">
+            {currentUser && (
+              <>
+                <button
+                  onClick={() => {
+                    closeMobileMenu();
+                    onNavigateView?.('dashboard');
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-sunny-navy bg-slate-50 hover:bg-slate-100 transition-colors text-left cursor-pointer"
+                >
+                  <LayoutDashboard className="w-4 h-4 text-emerald-600" />
+                  <span>{t.nav.myDashboard}</span>
+                </button>
+                <button
+                  onClick={() => {
+                    closeMobileMenu();
+                    onNavigateView?.('landing');
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer"
+                >
+                  <Compass className="w-4 h-4 text-sunny-navy" />
+                  <span>{t.nav.publicPortal}</span>
+                </button>
+              </>
+            )}
             <a
               href="#services"
               onClick={closeMobileMenu}
