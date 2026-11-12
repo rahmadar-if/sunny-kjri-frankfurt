@@ -154,10 +154,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
               <button
                 onClick={() => onNavigateView?.('dashboard')}
-                className="flex flex-col text-right hover:opacity-80 transition-opacity cursor-pointer group"
-                title={t.nav.myDashboard}
+                className="flex flex-col text-right hover:bg-slate-100/80 px-2 py-1 rounded-xl transition-all cursor-pointer group"
+                title={`${currentUser.name} — ${t.nav.myDashboard}`}
               >
-                <span className="text-xs font-bold text-sunny-navy group-hover:underline truncate max-w-[120px]">
+                <span className="text-xs font-bold text-sunny-navy group-hover:text-sunny-goldHover transition-colors truncate max-w-[130px] flex items-center justify-end gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   {currentUser.name}
                 </span>
                 <span className="text-[10px] text-slate-400">

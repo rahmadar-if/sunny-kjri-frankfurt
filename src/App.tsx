@@ -70,10 +70,8 @@ export function App() {
     if (pendingService) {
       setSelectedService(pendingService);
       setPendingService(null);
-    } else {
-      // By default, navigate directly to the authenticated Member Dashboard!
-      setCurrentView('dashboard');
     }
+    // Remain on current public page (do not redirect to dashboard)
   };
 
   // Enforce authentication gate: User MUST be logged in before applying
@@ -150,8 +148,6 @@ export function App() {
     setSelectedService(null);
     // Show E-ticket modal immediately
     setETicketApp(newRecord);
-    // Switch to dashboard so user sees their newly added active appointment!
-    setCurrentView('dashboard');
   };
 
   // Reschedule Appointment Handler
