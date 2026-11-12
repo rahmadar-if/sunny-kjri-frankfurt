@@ -183,17 +183,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Primary Action Button (Hidden on My Dashboard as requested) */}
-          {currentView !== 'dashboard' && (
-            <button
-              onClick={onBookClick}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-sunny-navy hover:bg-sunny-navyDark text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow transition-all group active:scale-95 cursor-pointer"
-            >
-              <span>{t.nav.appointment}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-sunny-gold group-hover:translate-x-0.5 transition-transform" />
-            </button>
-          )}
-
         </div>
 
         {/* Mobile Header Right (ONLY LOGO + LOGIN + FLAT BURGER) */}
